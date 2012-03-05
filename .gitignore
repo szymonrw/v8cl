@@ -1,0 +1,11 @@
+*~
+*.o
+*.out
+build
+.lock-wscript
+Debug
+Release
+node_modules
+deps
+ipch
+*.sublime-*
