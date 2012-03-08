@@ -53,9 +53,10 @@ namespace v8cl {
     { "clCreateKernel", CreateKernel, { One<void*>, CharArray }, ReturnPointer },
     { "clCreateKernelsInProgram", CreateKernelsInProgram, { One<void*> }, ReturnPointerArray },
     { "clSetKernelArg", SetKernelArg, { One<void*>, One<uint32_t>, One<size_t>, TypedArray } },
-    { "clEnqueueReadBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray } },
-    { "clEnqueueWriteBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray } },
-    { "clEnqueueNDRangeKernel", EnqueueNDRangeKernel, { One<void*>, One<void*>, Many<size_t>, Many<size_t>, Many<size_t> } },
+    { "clEnqueueReadBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer },
+    { "clEnqueueWriteBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer },
+    { "clEnqueueNDRangeKernel", EnqueueNDRangeKernel, { One<void*>, One<void*>, Many<size_t>, Many<size_t>, Many<size_t> }, ReturnPointer },
+    { "clSetEventCallback", SetEventCallback, { One<void*>, One<int32_t>, Persist, Persist } },
     { NULL }
   };
 
@@ -91,7 +92,7 @@ namespace v8cl {
     }
 
     vector<void*> result;
-    int32_t error = wrapper->action(wrapper->f, natives, result);
+    int32_t error = wrapper->action(wrapper, natives, result);
 
     if (error) {
       DeleteAllItems(natives);
@@ -115,7 +116,7 @@ namespace v8cl {
   }
 
   
-  void SetWebCL(Handle<Object> target) {
+  void SetWebCL(Handle<Object> target, EventLoopShaker shaker) {
     SetConstants(target);
 
     Handle<Array> loadingErrors = Array::New();
@@ -134,6 +135,7 @@ namespace v8cl {
     
     for (Wrapper *wrapper = wrappers; wrapper->name; ++wrapper) {
       wrapper->f = dlsym(opencl, wrapper->name);
+      wrapper->shaker = shaker;
       error = dlerror();
       if (error) {
         wrapper->f = NULL;

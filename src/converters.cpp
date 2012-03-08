@@ -29,6 +29,12 @@ namespace v8cl {
   }
 
   template<>
+  int32_t Get<int32_t> (Handle<Value> value) {
+    return value->Int32Value();
+  }
+
+
+  template<>
   size_t Get<size_t> (Handle<Value> value) {
     return value->IntegerValue();
   }
@@ -86,10 +92,12 @@ namespace v8cl {
     vector<void*> tmp;
     One<void*>(String::New(""), tmp);
     One<uint32_t>(String::New(""), tmp);
+    One<int32_t>(String::New(""), tmp);
     One<size_t>(String::New(""), tmp);
 
     Many<void*>(String::New(""), tmp);
     Many<uint32_t>(String::New(""), tmp);
+    Many<int32_t>(String::New(""), tmp);
     Many<size_t>(String::New(""), tmp);
   }
 
@@ -167,5 +175,12 @@ namespace v8cl {
     
     PushBackWrapped(natives, buff + byteOffset);
     PushBackWrapped(natives, byteLength);
+  }
+
+  void Persist (Handle<Value> value, vector<void*>& natives) {
+    cout << "persist" << endl;
+    Persistent<Value> *persisted = (Persistent<Value>*) malloc(sizeof(Persistent<Value>));
+    *persisted = Persistent<Value>::New(value);
+    natives.push_back(persisted);
   }
 }

@@ -44,13 +44,19 @@ console.log("   + 5 *");
 spitArray(xh, "x");
 console.log("   =");
 
-cl.enqueueWriteBuffer(queue, yd, 0, yh);
-cl.enqueueWriteBuffer(queue, xd, 0, xh);
-cl.enqueueNDRangeKernel(queue, axpy, [], [yh.length], [1]);
-cl.enqueueReadBuffer(queue, yd, 0, yh);
-cl.finish(queue);
+events = [];
+events.push(cl.enqueueWriteBuffer(queue, yd, 0, yh));
+events.push(cl.enqueueWriteBuffer(queue, xd, 0, xh));
+events.push(cl.enqueueNDRangeKernel(queue, axpy, [], [yh.length], [1]));
+events.push(cl.enqueueReadBuffer(queue, yd, 0, yh));
+console.log(events);
+cl.setEventCallback(events[3], cl.COMPLETE, function(event, status, data) {
+  console.log("EVENT", event, status, data);
+  spitArray(yh, "y");
+}, ["to są dane", 1,2,3]);
 
-spitArray(yh, "y");
+//cl.finish(queue);
+
 
 cl.releaseKernel(axpy);
 cl.releaseProgram(program);

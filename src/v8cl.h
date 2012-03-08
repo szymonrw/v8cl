@@ -13,10 +13,15 @@ namespace v8cl {
   using namespace v8;
   using namespace std;
 
+  struct EventHandler;
+  struct Wrapper;
+
   typedef void (*Converter) (Handle<Value> value, vector<void*>& natives);
-  typedef int32_t (*Action) (void *f, vector<void*>& natives, vector<void*>& result);
+  typedef int32_t (*Action) (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   typedef Handle<Value> (*Returner) (vector<void*>& natives, vector<void*>& result);
-  
+  typedef void (*EventLoopShaker) (EventHandler* handler);
+  typedef void (*pfn_notify) (void*, int32_t, void*);
+
   struct Wrapper {
     const char *name;
     Action action;
@@ -24,30 +29,42 @@ namespace v8cl {
     Returner returner;
     int minArgc;
     void *f;
+    EventLoopShaker shaker;
   };
-  
+
+  struct EventHandler {
+    EventLoopShaker shaker;
+    Persistent<Value> f;
+    Persistent<Value> data;
+    void* event;
+    int32_t type;
+  };
+
+    
   // Functions
-  int32_t OneArgFn (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t GetInfo (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t GetDependentInfo (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t GetPlatformIDs (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t GetDeviceIDs (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateContext (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateContextFromType (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateCommandQueue (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateBuffer (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateSubBuffer (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateImage2D (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateImage3D (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t GetSupportedImageFormats (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateSampler (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateProgramWithSource (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t BuildProgram (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateKernel (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateKernelsInProgram (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t SetKernelArg (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t EnqueueReadOrWriteBuffer (void *f, vector<void*>& natives, vector<void*>& result);
-  int32_t EnqueueNDRangeKernel (void *f, vector<void*>& natives, vector<void*>& result);
+  int32_t OneArgFn (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t GetInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t GetDependentInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t GetPlatformIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t GetDeviceIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateContext (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateContextFromType (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateCommandQueue (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateSubBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateImage2D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateImage3D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t GetSupportedImageFormats (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateSampler (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateProgramWithSource (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t BuildProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t CreateKernelsInProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t SetKernelArg (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t EnqueueReadOrWriteBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t EnqueueNDRangeKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  int32_t SetEventCallback (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  void InvokeBackInEventLoop (EventHandler* handler);
   
   // Converters
   template<typename T>
@@ -57,10 +74,11 @@ namespace v8cl {
 
   void NullTerminatedList (Handle<Value> value, vector<void*>& natives);
   void BufferRegion (Handle<Value> value, vector<void*>& natives);
-  void ImageFormat (Handle<Value> value, vector<void*>& native);
+  void ImageFormat (Handle<Value> value, vector<void*>& natives);
   void CharArray (Handle<Value> value, vector<void*>& natives);
   void TypedArray (Handle<Value> value, vector<void*>& natives);
   void TypedArray (Handle<Value> value, vector<void*>& natives);
+  void Persist (Handle<Value> value, vector<void*>& natives);
 
   // Exposed Returners
   Handle<Value> ReturnPointerArray (vector<void*>& natives, vector<void*>& result);
@@ -75,7 +93,7 @@ namespace v8cl {
   map<int, const char*> GetErrorCodes();
 
   // Put whole WebCL api on target obejct using this function
-  void SetWebCL(Handle<Object> target);
+  void SetWebCL(Handle<Object> target, EventLoopShaker shaker = NULL);
 
   // Native CL structs
   struct cl_buffer_region {
