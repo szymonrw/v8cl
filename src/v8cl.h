@@ -19,8 +19,14 @@ namespace v8cl {
   typedef void (*Converter) (Handle<Value> value, vector<void*>& natives);
   typedef int32_t (*Action) (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   typedef Handle<Value> (*Returner) (vector<void*>& natives, vector<void*>& result);
-  typedef void (*EventLoopShaker) (EventHandler* handler);
-  typedef void (*pfn_notify) (void*, int32_t, void*);
+
+  // Stuff needed to be implemented to support events
+  struct EventSupport {
+    void* (*add) (EventHandler* handler);
+    void (*shake) (void* their_handle);
+    //void (*remove) (EventHandler* handler);
+  };
+  //typedef void (*EventLoopShaker) (EventHandler* handler);
 
   struct Wrapper {
     const char *name;
@@ -29,15 +35,16 @@ namespace v8cl {
     Returner returner;
     int minArgc;
     void *f;
-    EventLoopShaker shaker;
+    EventSupport events;
   };
 
   struct EventHandler {
-    EventLoopShaker shaker;
+    EventSupport events;
     Persistent<Value> f;
     Persistent<Value> data;
     void* event;
     int32_t type;
+    void* impl_handle;
   };
 
     
@@ -93,7 +100,7 @@ namespace v8cl {
   map<int, const char*> GetErrorCodes();
 
   // Put whole WebCL api on target obejct using this function
-  void SetWebCL(Handle<Object> target, EventLoopShaker shaker = NULL);
+  void SetWebCL(Handle<Object> target, EventSupport events);
 
   // Native CL structs
   struct cl_buffer_region {
@@ -105,6 +112,8 @@ namespace v8cl {
     uint32_t image_channel_order;
     uint32_t image_channel_data_type;
   };
+
+  typedef void (*pfn_notify) (void*, int32_t, void*);
 
   // templates
 

@@ -770,10 +770,10 @@ namespace v8cl {
   void InvokedByOpenCL (void* event, int32_t type, void* data) {
     if (data) {
       EventHandler* handler = (EventHandler*) data;
-      if (handler->shaker) {
+      if (handler->events.shake) {
         handler->event = event;
         handler->type = type;
-        handler->shaker(handler);
+        handler->events.shake(handler->impl_handle);
       }
     } else {
       cout << "bad" << endl;
@@ -792,8 +792,6 @@ namespace v8cl {
     }
     handler->f.Dispose();
     handler->data.Dispose();
-    // Persistent<Value>::Dispose(handler->f);
-    // Persistent<Value>::Dispose(handler->data);
     delete handler;
   }
 
@@ -805,7 +803,7 @@ namespace v8cl {
     int32_t type = *(int32_t*) natives[1];
 
     EventHandler *handler = (EventHandler*) malloc(sizeof(EventHandler));
-    handler->shaker = wrapper->shaker;
+    handler->events = wrapper->events;
     handler->f = *(Persistent<Value>*) natives[2];
     handler->data = *(Persistent<Value>*) natives[3];
     handler->event = 0;
@@ -816,6 +814,8 @@ namespace v8cl {
       delete handler;
       return error;
     }
+
+    handler->impl_handle = handler->events.add(handler);
     
     return 0;
   }

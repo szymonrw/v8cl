@@ -116,7 +116,7 @@ namespace v8cl {
   }
 
   
-  void SetWebCL(Handle<Object> target, EventLoopShaker shaker) {
+  void SetWebCL(Handle<Object> target, EventSupport events) {
     SetConstants(target);
 
     Handle<Array> loadingErrors = Array::New();
@@ -135,7 +135,7 @@ namespace v8cl {
     
     for (Wrapper *wrapper = wrappers; wrapper->name; ++wrapper) {
       wrapper->f = dlsym(opencl, wrapper->name);
-      wrapper->shaker = shaker;
+      wrapper->events = events;
       error = dlerror();
       if (error) {
         wrapper->f = NULL;
