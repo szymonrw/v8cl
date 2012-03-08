@@ -95,7 +95,7 @@ arguments are dropped at this time.
 ### cl.createProgramWithSource
 
 Takes only two arguments: `context` and program source code as one string 
-(original OpenCL takes array of strings and concatenated them).
+(original OpenCL takes array of strings and concatenate them).
 
 ### cl.setKernelArg
 
@@ -109,10 +109,11 @@ Moreover, it enables you to pass `long` values as an array of two `Int32`'s
 ### cl.enqueueReadBuffer & cl.enqueueWriteBuffer
 
 `blocking_write` and `blocking_read` are dropped and fixed at `FALSE` to 
-possibly disable blocking UI thread in browser.
+possibly disable blocking UI thread in a browser.
 
-`ptr` argument have to be typed array. `cb` argument (number of bytes to copy) 
-is taken from it's size.
+`ptr` argument have to be a typed array. `cb` argument (number of bytes to copy) 
+is taken from it's size. If you want to pass only portion of the array, use it's
+`subarray` method.
 
 Event support is TBD.
 
