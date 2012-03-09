@@ -20,23 +20,21 @@ namespace v8cl {
   typedef int32_t (*Action) (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   typedef Handle<Value> (*Returner) (vector<void*>& natives, vector<void*>& result);
 
-  // Stuff needed to be implemented to support events
+  /**
+    Event Support consists of two functions.
+
+    `add` sets up event to be invoked later and associates it with given EventHandler. Returns native implementation-specific pointer. This pointer is given to `shake` function when event occurs.
+
+    `shake` needs to queue the event in event loop. It's responsibility is to cause invokation of InvokeBackInEventLoop(EventHandler*) _inside_ the event loop and clean up any implementation specific state (at any time after the event).
+
+    `shake` is possibly invoked in auxiliary thread so it needs to be thread-safe. 
+  */
   struct EventSupport {
     void* (*add) (EventHandler* handler);
     void (*shake) (void* their_handle);
-    //void (*remove) (EventHandler* handler);
   };
-  //typedef void (*EventLoopShaker) (EventHandler* handler);
 
-  struct Wrapper {
-    const char *name;
-    Action action;
-    Converter converters[20];
-    Returner returner;
-    int minArgc;
-    void *f;
-    EventSupport events;
-  };
+  void InvokeBackInEventLoop (EventHandler* handler);
 
   struct EventHandler {
     EventSupport events;
@@ -47,7 +45,17 @@ namespace v8cl {
     void* impl_handle;
   };
 
-    
+
+  struct Wrapper {
+    const char *name;
+    Action action;
+    Converter converters[20];
+    Returner returner;
+    int minArgc;
+    void *f;
+    EventSupport events;
+  };
+  
   // Functions
   int32_t OneArgFn (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   int32_t GetInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
@@ -71,7 +79,6 @@ namespace v8cl {
   int32_t EnqueueReadOrWriteBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   int32_t EnqueueNDRangeKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   int32_t SetEventCallback (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  void InvokeBackInEventLoop (EventHandler* handler);
   
   // Converters
   template<typename T>

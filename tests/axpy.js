@@ -52,6 +52,7 @@ events.push(cl.enqueueReadBuffer(queue, yd, 0, yh));
 console.log(events);
 cl.setEventCallback(events[3], cl.COMPLETE, function(event, status, data) {
   console.log("EVENT", event, status, data);
+  console.log(event == events[3]);
   spitArray(yh, "y");
 }, ["to są dane", 1,2,3]);
 

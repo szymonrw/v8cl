@@ -178,7 +178,6 @@ namespace v8cl {
   }
 
   void Persist (Handle<Value> value, vector<void*>& natives) {
-    cout << "persist" << endl;
     Persistent<Value> *persisted = (Persistent<Value>*) malloc(sizeof(Persistent<Value>));
     *persisted = Persistent<Value>::New(value);
     natives.push_back(persisted);
