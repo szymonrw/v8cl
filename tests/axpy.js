@@ -44,7 +44,7 @@ console.log(cl.getProgramBuildInfo(program, device, cl.PROGRAM_BUILD_LOG));
 
 var axpy = cl.createKernel(program, "axpy");
 var kernels = cl.createKernelsInProgram(program);
-//cl.releaseKernel(axpy);
+// cl.releaseKernel(axpy);
 console.log("axpy refcount:", cl.getKernelInfo(kernels[0], cl.KERNEL_REFERENCE_COUNT));
 
 var yd = cl.createBuffer(context, cl.MEM_READ_WRITE, yh.byteLength);
@@ -54,17 +54,20 @@ cl.setKernelArg(axpy, 0, 8, yd);
 cl.setKernelArg(axpy, 1, 8, xd);
 cl.setKernelArg(axpy, 2, 8, new Float64Array([5]));
 
-spitArray(yh, "y");
-console.log("   + 5 *");
-spitArray(xh, "x");
-console.log("   =");
 
 events = [];
 events.push(cl.enqueueWriteBuffer(queue, yd, 0, yh));
 //console.log("yh refcount: ")
 events.push(cl.enqueueWriteBuffer(queue, xd, 0, xh)); 
+cl.setEventCallback(events[1], cl.COMPLETE, null, xh);
 events.push(cl.enqueueNDRangeKernel(queue, axpy, [], [yh.length], [1]));
 events.push(cl.enqueueReadBuffer(queue, yd, 0, yh));
+
+
+spitArray(yh, "y");
+console.log("   + 5 *");
+spitArray(xh, "x");
+console.log("   =");
 
 //cl.releaseMemObject(yd);
 
@@ -73,7 +76,7 @@ cl.setEventCallback(events[3], cl.COMPLETE, function(event, status, data) {
   console.log("EVENT", status, data);
   //console.log(event == events[3]);
   //spitArray(xh, "x");
-  var i = xh;
+  //var i = xh;
   spitArray(yh, "y");
 }, ["to są dane", 1,2,3]);
 

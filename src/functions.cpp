@@ -806,7 +806,7 @@ namespace v8cl {
     // TODO: increase reference count?
     int32_t type = *(int32_t*) natives[1];
 
-    EventHandler *handler = (EventHandler*) malloc(sizeof(EventHandler));
+    EventHandler *handler = new EventHandler; //(EventHandler*) malloc(sizeof(EventHandler));
     handler->events = wrapper->events;
     handler->f = *(Persistent<Value>*) natives[2];
     handler->data = *(Persistent<Value>*) natives[3];

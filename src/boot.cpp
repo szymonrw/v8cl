@@ -137,6 +137,8 @@ namespace v8cl {
     value = TestGCInner(args[0]);
     return scope.Close(value);
   }
+
+  
   
   void SetWebCL(Handle<Object> target, EventSupport events) {
     SetConstants(target);

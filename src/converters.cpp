@@ -155,6 +155,8 @@ namespace v8cl {
       byteOffset = obj->Get(String::New("byteOffset"))->Uint32Value();
       byteLength = obj->Get(String::New("byteLength"))->Uint32Value();
       // This will work only if obj is ArrayBuffer. 
+      // TODO: this sometimes is causing segfault. Maybe we have tighten constraints here.
+      // bytelength == 0?
       buff = (uint8_t*) External::Unwrap(obj->GetInternalField(0));
 
       // If it's other typed array, value is kept in "buffer" field.
