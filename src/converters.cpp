@@ -40,12 +40,12 @@ namespace v8cl {
   }
 
   template<typename T>
-  void One (Handle<Value> value, vector<void*>& natives) {
+  void One (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     T native = Get<T>(value);
     PushBackWrapped(natives, native);
   }
 
-  // void PointerArray (Handle<Value> value, vector<void*>& natives) {
+  // void PointerArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
   //   if (!value->IsArray()) {
   //     natives.push_back(NULL);
   //     // set size = 0;
@@ -66,7 +66,7 @@ namespace v8cl {
   // }
 
   template<typename T>
-  void Many (Handle<Value> value, vector<void*>& natives) {
+  void Many (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     if (!value->IsArray()) {
       natives.push_back(NULL);
       // set size = 0;
@@ -90,18 +90,18 @@ namespace v8cl {
   // Forces generation of templates for types used.
   void _force_templates () {
     vector<void*> tmp;
-    One<void*>(String::New(""), tmp);
-    One<uint32_t>(String::New(""), tmp);
-    One<int32_t>(String::New(""), tmp);
-    One<size_t>(String::New(""), tmp);
+    One<void*>(NULL, String::New(""), tmp);
+    One<uint32_t>(NULL, String::New(""), tmp);
+    One<int32_t>(NULL, String::New(""), tmp);
+    One<size_t>(NULL, String::New(""), tmp);
 
-    Many<void*>(String::New(""), tmp);
-    Many<uint32_t>(String::New(""), tmp);
-    Many<int32_t>(String::New(""), tmp);
-    Many<size_t>(String::New(""), tmp);
+    Many<void*>(NULL, String::New(""), tmp);
+    Many<uint32_t>(NULL, String::New(""), tmp);
+    Many<int32_t>(NULL, String::New(""), tmp);
+    Many<size_t>(NULL, String::New(""), tmp);
   }
 
-  void NullTerminatedList (Handle<Value> value, vector<void*>& natives) {
+  void NullTerminatedList (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     if (!value->IsArray()) {
       natives.push_back(NULL);
       return;
@@ -118,7 +118,7 @@ namespace v8cl {
     natives.push_back(nativeArray);
   }
 
-  void BufferRegion (Handle<Value> value, vector<void*>& natives) {
+  void BufferRegion (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     Handle<Object> object = Handle<Object>::Cast<Value>(value);
     cl_buffer_region *region = (cl_buffer_region*) malloc(sizeof(cl_buffer_region));
     region->origin = object->Get(String::New("origin"))->IntegerValue();
@@ -126,7 +126,7 @@ namespace v8cl {
     natives.push_back(region);
   }
 
-  void ImageFormat (Handle<Value> value, vector<void*>& natives) {
+  void ImageFormat (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     Handle<Object> object = Handle<Object>::Cast<Value>(value);
     cl_image_format *format = (cl_image_format*) malloc(sizeof(cl_image_format));
     format->image_channel_order = object->Get(String::New("image_channel_order"))->Uint32Value();
@@ -134,7 +134,7 @@ namespace v8cl {
     natives.push_back(format);
   }
 
-  void CharArray (Handle<Value> value, vector<void*>& natives) {
+  void CharArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     Handle<String> str = Handle<String>::Cast<Value>(value);
     size_t size = str->Utf8Length() + 1;
     char* chars = (char*) malloc(size);
@@ -143,7 +143,7 @@ namespace v8cl {
     PushBackWrapped(natives, size);
   }
 
-  void TypedArray (Handle<Value> value, vector<void*>& natives) {
+  void TypedArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     uint8_t *buff = NULL;
     size_t byteOffset = 0;
     size_t byteLength = 0;
@@ -177,7 +177,7 @@ namespace v8cl {
     PushBackWrapped(natives, byteLength);
   }
   
-  void Persist (Handle<Value> value, vector<void*>& natives) {
+  void Persist (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     Persistent<Value> *persisted = (Persistent<Value>*) malloc(sizeof(Persistent<Value>));
     *persisted = Persistent<Value>::New(value);
     natives.push_back(persisted);

@@ -16,7 +16,7 @@ namespace v8cl {
   struct EventHandler;
   struct Wrapper;
 
-  typedef void (*Converter) (Handle<Value> value, vector<void*>& natives);
+  typedef void (*Converter) (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
   typedef int32_t (*Action) (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   typedef Handle<Value> (*Returner) (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
 
@@ -45,6 +45,13 @@ namespace v8cl {
     void* impl_handle;
   };
 
+  struct GCCallback {
+    const char* getInfoName;
+    int32_t arg;
+    void *getInfo;
+    void *event;
+  };
+
 
   struct Wrapper {
     const char *name;
@@ -52,6 +59,7 @@ namespace v8cl {
     Converter converters[20];
     Returner returner;
     const char *releaseFunctionName;
+    GCCallback gc;
     int minArgc;
     void *f;
     void *releaseFunction;
@@ -84,17 +92,17 @@ namespace v8cl {
   
   // Converters
   template<typename T>
-  void One (Handle<Value> value, vector<void*>& natives);
+  void One (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
   template<typename T>
-  void Many (Handle<Value> value, vector<void*>& natives);
+  void Many (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
 
-  void NullTerminatedList (Handle<Value> value, vector<void*>& natives);
-  void BufferRegion (Handle<Value> value, vector<void*>& natives);
-  void ImageFormat (Handle<Value> value, vector<void*>& natives);
-  void CharArray (Handle<Value> value, vector<void*>& natives);
-  void TypedArray (Handle<Value> value, vector<void*>& natives);
-  void TypedArray (Handle<Value> value, vector<void*>& natives);
-  void Persist (Handle<Value> value, vector<void*>& natives);
+  void NullTerminatedList (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
+  void BufferRegion (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
+  void ImageFormat (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
+  void CharArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
+  void TypedArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
+  void TypedArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
+  void Persist (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
 
   // Exposed Returners
   Handle<Value> ReturnPointerArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);

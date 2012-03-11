@@ -3,22 +3,6 @@
 
 namespace v8cl {
 
-  void IamWeak (Persistent<Value> object, void* f) {
-    cout << "IamWeak " << (uint64_t) External::Unwrap(object) << (object->IsArray() ? " array" : " noarray") << endl;
-    // if (object->IsArray()) {
-    //   Persistent<Array> array = Persistent<Array>::Cast<Value>(object);
-    //   for (uint32_t i = 0; i < array->Length(); ++i) {
-    //     //array->Get(i).Dispose();
-    //     array->Get(i).Clear();
-    //   }
-    //   array.Dispose();
-    //   array.Clear();
-    // }
-    object.Dispose();
-    // object.Clear();
-    //exit(100);
-  }
-
   // Decrease reference count
   void DisposeOpenCLObject (Persistent<Value> object, void* f) {
     cout << "Dispose CL " << (uintptr_t) f ;
@@ -33,11 +17,6 @@ namespace v8cl {
       }
     }
     cout << endl;
-  }
-
-  // Check if events are CL_COMPLETE
-  void DisposeJavaScriptObject (Persistent<Value> object, void* events) {
-
   }
 
   Handle<Value> WrapPointer (void* ptr, void* retainer = NULL) {

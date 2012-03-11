@@ -72,7 +72,8 @@ events.push(cl.enqueueReadBuffer(queue, yd, 0, yh));
 cl.setEventCallback(events[3], cl.COMPLETE, function(event, status, data) {
   console.log("EVENT", status, data);
   //console.log(event == events[3]);
-  spitArray(xh, "x");
+  //spitArray(xh, "x");
+  var i = xh;
   spitArray(yh, "y");
 }, ["to są dane", 1,2,3]);
 
