@@ -54,8 +54,8 @@ namespace v8cl {
     { "clCreateKernel", CreateKernel, { One<void*>, CharArray }, ReturnPointer, "clReleaseKernel" },
     { "clCreateKernelsInProgram", CreateKernelsInProgram, { One<void*> }, ReturnPointerArray, "clReleaseKernel" },
     { "clSetKernelArg", SetKernelArg, { One<void*>, One<uint32_t>, One<size_t>, TypedArray } },
-    { "clEnqueueReadBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer, "clReleaseEvent", { "clGetEventInfo", 3 } },
-    { "clEnqueueWriteBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer, "clReleaseEvent"/*, { "clGetEventInfo", 3 }*/ },
+    { "clEnqueueReadBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer, "clReleaseEvent" },
+    { "clEnqueueWriteBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer, "clReleaseEvent" },
     { "clEnqueueNDRangeKernel", EnqueueNDRangeKernel, { One<void*>, One<void*>, Many<size_t>, Many<size_t>, Many<size_t> }, ReturnPointer, "clReleaseEvent" },
     { "clSetEventCallback", SetEventCallback, { One<void*>, One<int32_t>, Persist, Persist } },
     { NULL }
@@ -68,23 +68,6 @@ namespace v8cl {
         it < end; ++it) {
       if (*it) free(*it);
     }
-  }
-
-  // Check if events are CL_COMPLETE
-  void DisposeJSObject (Persistent<Value> object, void* ptr) {
-    cout << "DisposeJSObject";
-    GCCallback *callback = (GCCallback*) ptr;
-    int32_t (*clGetEventInfo) (void*, uint32_t, size_t, void*, size_t*);
-    *(void**) &clGetEventInfo = callback->getInfo;
-    int32_t status = -1;
-    int32_t error = clGetEventInfo(callback->event, CL_EVENT_COMMAND_EXECUTION_STATUS, sizeof(uint32_t), &status, NULL);
-    cout << " error " << error << " status " << status;
-    if (error || status <= 0) {
-      object.Dispose();
-    } else {
-      object.MakeWeak(ptr, DisposeJSObject);
-    }
-    cout << endl;
   }
 
   Handle<Value> InvokeWrapper (const Arguments& args) {
@@ -120,16 +103,6 @@ namespace v8cl {
       } else {
         return scope.Close(ThrowException(Exception::Error(String::Concat(String::New("Unknown WebCL error code: "), Integer::New(error)->ToString()))));
       }
-    }
-
-    if (wrapper->gc.getInfo) {
-      cout << "Persisting thing\n";
-      Persistent<Value> p = Persistent<Value>::New(args[wrapper->gc.arg]);
-      void *event = *(void**) result[0];
-      GCCallback *callback = (GCCallback*) malloc(sizeof(GCCallback));
-      callback->getInfo = wrapper->gc.getInfo;
-      callback->event = event;
-      p.MakeWeak(callback, DisposeJSObject);
     }
 
     Handle<Value> jsResult = Undefined();
@@ -203,15 +176,6 @@ namespace v8cl {
           wrapper->releaseFunction = NULL;
           loadingErrors->Set(errorIdx++, String::New(error));
         }        
-      }
-
-      if (wrapper->gc.getInfoName) {
-        wrapper->gc.getInfo = dlsym(opencl, wrapper->gc.getInfoName);
-        error = dlerror();
-        if (error) {
-          wrapper->gc.getInfo = NULL;
-          loadingErrors->Set(errorIdx++, String::New(error));
-        }         
       }
 
       if (!wrapper->minArgc) {

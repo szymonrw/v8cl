@@ -45,21 +45,12 @@ namespace v8cl {
     void* impl_handle;
   };
 
-  struct GCCallback {
-    const char* getInfoName;
-    int32_t arg;
-    void *getInfo;
-    void *event;
-  };
-
-
   struct Wrapper {
     const char *name;
     Action action;
     Converter converters[20];
     Returner returner;
     const char *releaseFunctionName;
-    GCCallback gc;
     int minArgc;
     void *f;
     void *releaseFunction;
