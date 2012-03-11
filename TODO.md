@@ -1,0 +1,1 @@
+- set user events status to complete (or error?) when releasing.

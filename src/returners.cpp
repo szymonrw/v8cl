@@ -3,21 +3,75 @@
 
 namespace v8cl {
 
-  Handle<Value> ReturnPointerArray (vector<void*>& natives, vector<void*>& result) {
-    Handle<Array> array = Array::New();
+  void IamWeak (Persistent<Value> object, void* f) {
+    cout << "IamWeak " << (uint64_t) External::Unwrap(object) << (object->IsArray() ? " array" : " noarray") << endl;
+    // if (object->IsArray()) {
+    //   Persistent<Array> array = Persistent<Array>::Cast<Value>(object);
+    //   for (uint32_t i = 0; i < array->Length(); ++i) {
+    //     //array->Get(i).Dispose();
+    //     array->Get(i).Clear();
+    //   }
+    //   array.Dispose();
+    //   array.Clear();
+    // }
+    object.Dispose();
+    // object.Clear();
+    //exit(100);
+  }
+
+  // Decrease reference count
+  void DisposeOpenCLObject (Persistent<Value> object, void* f) {
+    cout << "Dispose CL " << (uintptr_t) f ;
+    if (f) {
+      int32_t (*release) (void* smth);
+      *(void**) &release = f;
+      int32_t error = release(External::Unwrap(object));
+      if (!error) {
+        cout << " SUCCESS";
+      } else {
+        cout << " ERROR " << error;
+      }
+    }
+    cout << endl;
+  }
+
+  // Check if events are CL_COMPLETE
+  void DisposeJavaScriptObject (Persistent<Value> object, void* events) {
+
+  }
+
+  Handle<Value> WrapPointer (void* ptr, void* retainer = NULL) {
+    Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
+    p.MakeWeak(retainer, DisposeOpenCLObject);
+    return p;
+  }
+
+  Handle<Value> ReturnPointerArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
+    Local<Array> array = Array::New();
     
     void **nativeArray = (void**) result[0];
     size_t size = 0;
     if (result.size() > 1) size = *(size_t*) result[1] / sizeof(void*);
 
     for (size_t i = 0; i < size; ++i) {
-      array->Set(i, External::Wrap(nativeArray[i]));
+      // Local<Value> ptr = ;
+      // Persistent<Value> p = Persistent<Value>::New(External::New(nativeArray[i]));
+      // p.MakeWeak(NULL, IamWeak);
+      array->Set(i, WrapPointer(nativeArray[i], wrapper->releaseFunction));
     }
 
     return array;
   }
 
-  Handle<Value> ReturnBinaryArray (vector<void*>& natives, vector<void*>& result) {
+  Handle<Value> ReturnPointer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
+    // void *ptr = *(void**) result[0];
+    // Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
+    // p.MakeWeak(NULL, IamWeak);
+    return WrapPointer(*(void**) result[0], wrapper->releaseFunction);
+  }
+
+
+  Handle<Value> ReturnBinaryArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     Handle<Array> array = Array::New();
     size_t *sizes = (size_t*) result[0];
     size_t num_binaries = *(size_t*) result[1];
@@ -29,7 +83,7 @@ namespace v8cl {
     return array;
   }
 
-  Handle<Value> ReturnImageFormatArray (vector<void*>& natives, vector<void*>& result) {
+  Handle<Value> ReturnImageFormatArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     Handle<Array> array = Array::New();
 
     cl_image_format *formats = (cl_image_format*) result[0];
@@ -46,7 +100,7 @@ namespace v8cl {
     return array;
   }
 
-  Handle<Value> ReturnImageFormat (vector<void*>& natives, vector<void*>& result) {
+  Handle<Value> ReturnImageFormat (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     cl_image_format *format = (cl_image_format*) result[0];
     
     Handle<Object> obj = Object::New();
@@ -56,7 +110,7 @@ namespace v8cl {
     return obj;
   }
 
-  Handle<Value> ReturnNullTerminatedListAsIntegerArray (vector<void*>& natives, vector<void*>& result) {
+  Handle<Value> ReturnNullTerminatedListAsIntegerArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     intptr_t *nativeArray = (intptr_t*) result[0];
     if (!nativeArray) {
       return Null();
@@ -75,24 +129,19 @@ namespace v8cl {
     return array;
   }
 
-  Handle<Value> ReturnPointer (vector<void*>& natives, vector<void*>& result) {
-    void *ptr = *(void**) result[0];
-    return External::Wrap(ptr);
-  }
-
-  Handle<Value> ReturnString (vector<void*>& natives, vector<void*>& result) {
+  Handle<Value> ReturnString (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     char *ptr = (char*) result[0];
     return String::New(ptr);
   }
 
   template<typename JSType, typename NativeType>
-  Handle<Value> ReturnValue (vector<void*>& natives, vector<void*>& result) {
+  Handle<Value> ReturnValue (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     NativeType value = *(NativeType*) result[0];
     return JSType::New(value);
   }
   
   template<typename JSType, typename NativeType>
-  Handle<Value> ReturnArray (vector<void*>& natives, vector<void*>& result) {
+  Handle<Value> ReturnArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     Handle<Array> array = Array::New();
     
     NativeType *nativeArray = (NativeType*) result[0];
@@ -106,7 +155,7 @@ namespace v8cl {
     return array;
   }
 
-  Handle<Value> ReturnInfo (vector<void*>& natives, vector<void*>& result) {
+  Handle<Value> ReturnInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     uint32_t name = *(uint32_t*) natives.back();
     Returner returner = ReturnValue<Uint32, uint32_t>;
     switch (name) {
@@ -200,6 +249,6 @@ namespace v8cl {
       returner = ReturnValue<Integer, int32_t>;
       break;
     }
-    return returner(natives, result);
+    return returner(wrapper, natives, result);
   }
 }

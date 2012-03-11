@@ -39,21 +39,21 @@ namespace v8cl {
     // Individual functions
     { "clGetPlatformIDs", GetPlatformIDs, {}, ReturnPointerArray },
     { "clGetDeviceIDs", GetDeviceIDs, { One<void*>, One<uint32_t> }, ReturnPointerArray },
-    { "clCreateContext", CreateContext, { NullTerminatedList, Many<void*> }, ReturnPointer },
-    { "clCreateCommandQueue", CreateCommandQueue, { One<void*>, One<void*>, One<uint32_t> }, ReturnPointer },
+    { "clCreateContext", CreateContext, { NullTerminatedList, Many<void*> }, ReturnPointer, "clReleaseContext" },
+    { "clCreateCommandQueue", CreateCommandQueue, { One<void*>, One<void*>, One<uint32_t> }, ReturnPointer, "clReleaseCommandQueue" },
     // TODO: segfault in libOpenCL.so { "clCreateContextFromType", { NullTerminatedList, One<uint32_t> }, CreateContextFromType, PointerReturner, 2},
-    { "clCreateBuffer", CreateBuffer, { One<void*>, One<uint32_t>, One<size_t> }, ReturnPointer },
-    { "clCreateSubBuffer", CreateSubBuffer, { One<void*>, One<uint32_t>, One<uint32_t>, BufferRegion }, ReturnPointer },
-    { "clCreateImage2D", CreateImage2D, { One<void*>, One<uint32_t>, ImageFormat, One<size_t>, One<size_t> }, ReturnPointer },
-    { "clCreateImage3D", CreateImage3D, { One<void*>, One<uint32_t>, ImageFormat, One<size_t>, One<size_t>, One<size_t> }, ReturnPointer },
+    { "clCreateBuffer", CreateBuffer, { One<void*>, One<uint32_t>, One<size_t> }, ReturnPointer, "clReleaseMemObject" },
+    { "clCreateSubBuffer", CreateSubBuffer, { One<void*>, One<uint32_t>, One<uint32_t>, BufferRegion }, ReturnPointer, "clReleaseMemObject" },
+    { "clCreateImage2D", CreateImage2D, { One<void*>, One<uint32_t>, ImageFormat, One<size_t>, One<size_t> }, ReturnPointer, "clReleaseMemObject" },
+    { "clCreateImage3D", CreateImage3D, { One<void*>, One<uint32_t>, ImageFormat, One<size_t>, One<size_t>, One<size_t> }, ReturnPointer, "clReleaseMemObject" },
     { "clGetSupportedImageFormats", GetSupportedImageFormats, { One<void*>, One<uint32_t>, One<uint32_t> }, ReturnImageFormatArray },
-    { "clCreateSampler", CreateSampler, { One<void*>, One<uint32_t>, One<uint32_t>, One<uint32_t> }, ReturnPointer },
-    { "clCreateProgramWithSource", CreateProgramWithSource, { One<void*>, CharArray }, ReturnPointer },
+    { "clCreateSampler", CreateSampler, { One<void*>, One<uint32_t>, One<uint32_t>, One<uint32_t> }, ReturnPointer, "clReleaseMemObject" },
+    { "clCreateProgramWithSource", CreateProgramWithSource, { One<void*>, CharArray }, ReturnPointer, "clReleaseProgram" },
     { "clBuildProgram", BuildProgram, { One<void*>, Many<void*>, CharArray } },
-    { "clCreateKernel", CreateKernel, { One<void*>, CharArray }, ReturnPointer },
-    { "clCreateKernelsInProgram", CreateKernelsInProgram, { One<void*> }, ReturnPointerArray },
+    { "clCreateKernel", CreateKernel, { One<void*>, CharArray }, ReturnPointer, "clReleaseKernel" },
+    { "clCreateKernelsInProgram", CreateKernelsInProgram, { One<void*> }, ReturnPointerArray, "clReleaseKernel" },
     { "clSetKernelArg", SetKernelArg, { One<void*>, One<uint32_t>, One<size_t>, TypedArray } },
-    { "clEnqueueReadBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer },
+    { "clEnqueueReadBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer, "clReleaseEvent" },
     { "clEnqueueWriteBuffer", EnqueueReadOrWriteBuffer, { One<void*>, One<void*>, One<uint32_t>, TypedArray }, ReturnPointer },
     { "clEnqueueNDRangeKernel", EnqueueNDRangeKernel, { One<void*>, One<void*>, Many<size_t>, Many<size_t>, Many<size_t> }, ReturnPointer },
     { "clSetEventCallback", SetEventCallback, { One<void*>, One<int32_t>, Persist, Persist } },
@@ -74,15 +74,15 @@ namespace v8cl {
 
     Wrapper *wrapper = (Wrapper*) External::Unwrap(args.Data());
     if (!wrapper) {
-      return ThrowException(Exception::Error(String::New("Wrapper missing.")));
+      return scope.Close(ThrowException(Exception::Error(String::New("Wrapper missing."))));
     }
     if (!wrapper->f) {
-      return ThrowException(Exception::Error(String::New("Function not implemented.")));
+      return scope.Close(ThrowException(Exception::Error(String::New("Function not implemented."))));
     }
 
     int length = args.Length();
     if (length < wrapper->minArgc) {
-      return ThrowException(Exception::Error(String::New("Need more arguments.")));
+      return scope.Close(ThrowException(Exception::Error(String::New("Need more arguments."))));
     }
     
     Converter *converter = wrapper->converters;
@@ -107,7 +107,7 @@ namespace v8cl {
     Handle<Value> jsResult = Undefined();
 
     if (wrapper->returner) {
-      jsResult = wrapper->returner(natives, result);
+      jsResult = wrapper->returner(wrapper, natives, result);
     }
 
     DeleteAllItems(natives);
@@ -115,6 +115,27 @@ namespace v8cl {
     return scope.Close(jsResult);
   }
 
+  void CollectGarbage (Persistent<Value> value, void* params) {
+    cout << *(uint64_t*) params << " Collected Garbage\n";
+    free(params);
+    value.Dispose();
+  }
+
+  Handle<Value> TestGCInner(Handle<Value> old) {
+    void *mem = malloc(8);
+    cout << *(uint64_t*) mem << endl;
+    Persistent<Value> handle = Persistent<Value>::New(External::New(mem));
+    handle.MakeWeak(mem, CollectGarbage);
+    return handle;
+  }
+
+
+  Handle<Value> TestGC (const Arguments& args) {
+    HandleScope scope;
+    Handle<Value> value = Undefined();
+    value = TestGCInner(args[0]);
+    return scope.Close(value);
+  }
   
   void SetWebCL(Handle<Object> target, EventSupport events) {
     SetConstants(target);
@@ -132,6 +153,11 @@ namespace v8cl {
 
     uint32_t errorIdx = 0;
     char firstLetter[2] = " ";
+
+    /// testing
+    Handle<FunctionTemplate> gctpl = FunctionTemplate::New(TestGC);
+    target->Set(String::New("testgc"), gctpl->GetFunction());
+    /// end testing
     
     for (Wrapper *wrapper = wrappers; wrapper->name; ++wrapper) {
       wrapper->f = dlsym(opencl, wrapper->name);
@@ -140,6 +166,15 @@ namespace v8cl {
       if (error) {
         wrapper->f = NULL;
         loadingErrors->Set(errorIdx++, String::New(error));
+      }
+
+      if (wrapper->releaseFunctionName) {
+        wrapper->releaseFunction = dlsym(opencl, wrapper->releaseFunctionName);
+        error = dlerror();
+        if (error) {
+          wrapper->releaseFunction = NULL;
+          loadingErrors->Set(errorIdx++, String::New(error));
+        }        
       }
 
       if (!wrapper->minArgc) {

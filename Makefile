@@ -15,7 +15,7 @@ TESTS_OUTPUTS = $(patsubst tests/%.js,build/%.txt,$(TESTS))
 .PHONY: node_tests all
 
 all: $(NODE_TARGET) node_tests
-	node tests/axpy.js
+	node --expose_gc tests/axpy.js
 
 
 $(NODE_TARGET): $(OBJECTS) $(NODE_GLUE_OBJECTS)

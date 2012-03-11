@@ -18,7 +18,7 @@ namespace v8cl {
 
   typedef void (*Converter) (Handle<Value> value, vector<void*>& natives);
   typedef int32_t (*Action) (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  typedef Handle<Value> (*Returner) (vector<void*>& natives, vector<void*>& result);
+  typedef Handle<Value> (*Returner) (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
 
   /**
     Event Support consists of two functions.
@@ -51,8 +51,10 @@ namespace v8cl {
     Action action;
     Converter converters[20];
     Returner returner;
+    const char *releaseFunctionName;
     int minArgc;
     void *f;
+    void *releaseFunction;
     EventSupport events;
   };
   
@@ -95,12 +97,12 @@ namespace v8cl {
   void Persist (Handle<Value> value, vector<void*>& natives);
 
   // Exposed Returners
-  Handle<Value> ReturnPointerArray (vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnImageFormatArray (vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnNullTerminatedListAsIntegerArray (vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnPointer (vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnString (vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnInfo (vector<void*>& natives, vector<void*>& result);
+  Handle<Value> ReturnPointerArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  Handle<Value> ReturnImageFormatArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  Handle<Value> ReturnNullTerminatedListAsIntegerArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  Handle<Value> ReturnPointer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  Handle<Value> ReturnString (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
+  Handle<Value> ReturnInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
 
   // Constants
   void SetConstants(Handle<Object> target);

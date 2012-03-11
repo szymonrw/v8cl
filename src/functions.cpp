@@ -52,6 +52,7 @@ namespace v8cl {
     *(void**) &clFn = wrapper->f;
 
     void* smth = *(void**) natives[0];
+    
     return clFn(smth);
   }
 
@@ -791,7 +792,9 @@ namespace v8cl {
       f.Dispose();
     }
     handler->f.Dispose();
+    handler->f.Clear();
     handler->data.Dispose();
+    handler->data.Clear();
     delete handler;
   }
 
@@ -800,6 +803,7 @@ namespace v8cl {
     *(void**) &clSetEventCallback = wrapper->f;
 
     void *event = *(void**) natives[0];
+    // TODO: increase reference count?
     int32_t type = *(int32_t*) natives[1];
 
     EventHandler *handler = (EventHandler*) malloc(sizeof(EventHandler));
