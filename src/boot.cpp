@@ -161,8 +161,12 @@ namespace v8cl {
     Handle<FunctionTemplate> gctpl = FunctionTemplate::New(TestGC);
     target->Set(String::New("testgc"), gctpl->GetFunction());
     /// end testing
+
+    Persistent<ObjectTemplate> objectTemplate = Persistent<ObjectTemplate>::New(ObjectTemplate::New());
+    objectTemplate->SetInternalFieldCount(1);
     
     for (Wrapper *wrapper = wrappers; wrapper->name; ++wrapper) {
+      wrapper->objectTemplate = objectTemplate;
       wrapper->f = dlsym(opencl, wrapper->name);
       wrapper->events = events;
       error = dlerror();

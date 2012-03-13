@@ -53,6 +53,7 @@ namespace v8cl {
     const char *releaseFunctionName;
     int minArgc;
     void *f;
+    Persistent<ObjectTemplate> objectTemplate;
     void *releaseFunction;
     EventSupport events;
   };

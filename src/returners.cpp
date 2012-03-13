@@ -4,23 +4,33 @@
 namespace v8cl {
 
   // Decrease reference count
-  void DisposeOpenCLObject (Persistent<Value> object, void* f) {
+  void DisposeOpenCLObject (Persistent<Value> value, void* f) {
     cout << "Dispose CL " << (uintptr_t) f ;
-    if (f) {
-      int32_t (*release) (void* smth);
-      *(void**) &release = f;
-      int32_t error = release(External::Unwrap(object));
-      if (!error) {
-        cout << " SUCCESS";
-      } else {
-        cout << " ERROR " << error;
+    if (f && value->IsObject()) {
+      Local<Object> object = value->ToObject();
+      if (object->InternalFieldCount()) {
+        int32_t (*release) (void* smth);
+        *(void**) &release = f;
+        void *ptr = object->GetPointerFromInternalField(0);
+        cout << " " << (uintptr_t) ptr;
+        int32_t error = release(ptr);
+        if (!error) {
+          cout << " SUCCESS";
+        } else {
+          cout << " ERROR " << error;
+        }
       }
     }
+    value.Dispose();
+    value.Clear();
     cout << endl;
   }
 
-  Handle<Value> WrapPointer (void* ptr, void* retainer = NULL) {
-    Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
+  Handle<Value> WrapPointer (Persistent<ObjectTemplate> tpl, void* ptr, void* retainer = NULL) {
+    // Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
+    Persistent<Object> p = Persistent<Object>::New(tpl->NewInstance());
+    p->SetPointerInInternalField(0, ptr);
+    cout << "PTROUT " << (uintptr_t) ptr << endl;
     p.MakeWeak(retainer, DisposeOpenCLObject);
     return p;
   }
@@ -36,7 +46,7 @@ namespace v8cl {
       // Local<Value> ptr = ;
       // Persistent<Value> p = Persistent<Value>::New(External::New(nativeArray[i]));
       // p.MakeWeak(NULL, IamWeak);
-      array->Set(i, WrapPointer(nativeArray[i], wrapper->releaseFunction));
+      array->Set(i, WrapPointer(wrapper->objectTemplate, nativeArray[i], wrapper->releaseFunction));
     }
 
     return array;
@@ -46,7 +56,7 @@ namespace v8cl {
     // void *ptr = *(void**) result[0];
     // Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
     // p.MakeWeak(NULL, IamWeak);
-    return WrapPointer(*(void**) result[0], wrapper->releaseFunction);
+    return WrapPointer(wrapper->objectTemplate, *(void**) result[0], wrapper->releaseFunction);
   }
 
 

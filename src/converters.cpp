@@ -20,7 +20,15 @@ namespace v8cl {
 
   template<>
   void* Get<void*> (Handle<Value> value) {
-    return External::Unwrap(value);
+    void *ptr = NULL;
+    if (value->IsObject()) {
+      Local<Object> object = value->ToObject();
+      if (object->InternalFieldCount()) {
+        ptr = object->GetPointerFromInternalField(0);
+        cout << "PTR IN " << (uintptr_t) ptr << endl;
+      }
+    }
+    return ptr;
   }
 
   template<>

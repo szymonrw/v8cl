@@ -26,7 +26,9 @@ for (var i = 1; i < yh.length; ++i) {
   xh[i] = xh[i-1] + 10;
 }
 
-var device = cl.getDeviceIDs(cl.getPlatformIDs()[0], cl.DEVICE_TYPE_ALL)[0];
+var platforms = cl.getPlatformIDs();
+console.log("platforms", platforms);
+var device = cl.getDeviceIDs(platforms[0], cl.DEVICE_TYPE_ALL)[0];
 var context = cl.createContext(null, [device]);
 
 var queue = cl.createCommandQueue(context, device, 0);
@@ -43,7 +45,7 @@ cl.buildProgram(program, [device], "");
 console.log(cl.getProgramBuildInfo(program, device, cl.PROGRAM_BUILD_LOG));
 
 var axpy = cl.createKernel(program, "axpy");
-var kernels = cl.createKernelsInProgram(program);
+// var kernels = cl.createKernelsInProgram(program);
 
 var yd = cl.createBuffer(context, cl.MEM_READ_WRITE, yh.byteLength);
 var xd = cl.createBuffer(context, cl.MEM_READ_ONLY, xh.byteLength);
@@ -83,6 +85,7 @@ cl.flush(queue);
 
 
 f();
+
 for (var i = 0; i < 1000; ++i) {
   gc();
 }
