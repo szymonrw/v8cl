@@ -53,7 +53,7 @@ var xd = cl.createBuffer(context, cl.MEM_READ_ONLY, xh.byteLength);
 cl.setKernelArg(axpy, 0, 8, yd);
 cl.setKernelArg(axpy, 1, 8, xd);
 cl.setKernelArg(axpy, 2, 8, new Float64Array([5]));
-
+//cl.setKernelArg(axpy, 2, 8, new Buffer([1,2,3,4,5,6,7,8]));
 
 events = [];
 events.push(cl.enqueueWriteBuffer(queue, yd, 0, yh));

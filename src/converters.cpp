@@ -1,9 +1,3 @@
-#ifdef _WITH_NODE
-#include <node.h>
-#include <node_buffer.h>
-#include <node_version.h>
-#endif
-
 #include "v8cl.h"
 
 namespace v8cl {
@@ -152,38 +146,40 @@ namespace v8cl {
   }
 
   void TypedArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
-    uint8_t *buff = NULL;
-    size_t byteOffset = 0;
+    void *buff = NULL;
     size_t byteLength = 0;
     
     if (value->IsObject()) {
-      Handle<Object> obj = Handle<Object>::Cast<Value>(value);
+      Handle<Object> obj = value->ToObject();
+      if (obj->HasIndexedPropertiesInExternalArrayData()) {
+        buff = obj->GetIndexedPropertiesExternalArrayData();
+        byteLength = obj->GetIndexedPropertiesExternalArrayDataLength();
 
-      // ArrayBuffer or other typed array.
-      byteOffset = obj->Get(String::New("byteOffset"))->Uint32Value();
-      byteLength = obj->Get(String::New("byteLength"))->Uint32Value();
-      // This will work only if obj is ArrayBuffer. 
-      // TODO: this sometimes is causing segfault. Maybe we have tighten constraints here.
-      // bytelength == 0?
-      buff = (uint8_t*) External::Unwrap(obj->GetInternalField(0));
-
-      // If it's other typed array, value is kept in "buffer" field.
-      if (!buff) {
-        buff = (uint8_t*) External::Unwrap(Handle<Object>::Cast<Value>(
-          obj->Get(String::New("buffer")))->GetInternalField(0));
-        #ifdef _WITH_NODE
-        if (!buff) {
-          byteLength = node::Buffer::Length(obj);  
-          buff = (uint8_t*) node::Buffer::Data(obj);
-          byteOffset = 0;
+        switch (obj->GetIndexedPropertiesExternalArrayDataType()) {
+        case kExternalByteArray:
+        case kExternalUnsignedByteArray:
+        case kExternalPixelArray:
+          break;
+        case kExternalShortArray:
+        case kExternalUnsignedShortArray:
+          byteLength *= 2;
+          break;
+        case kExternalIntArray:
+        case kExternalUnsignedIntArray:
+        case kExternalFloatArray:
+          byteLength *= 4;
+          break;
+        case kExternalDoubleArray:
+          byteLength *= 8;
+          break;
         }
-        #endif
+        cout << "buff " << (uintptr_t) buff << " len " << byteLength << endl;
+      } else {
+        buff = Get<void*>(value);
       }
-    } else {
-      buff = (uint8_t*) External::Unwrap(value);
     }
     
-    PushBackWrapped(natives, buff + byteOffset);
+    PushBackWrapped(natives, buff);
     PushBackWrapped(natives, byteLength);
   }
   
