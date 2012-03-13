@@ -447,6 +447,8 @@ namespace v8cl {
       return error;
     }
 
+    cout << "MEM " << (uintptr_t) mem << endl;
+
     PushBackWrapped(result, mem);
     return 0;
   }

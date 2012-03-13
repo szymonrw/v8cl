@@ -56,6 +56,8 @@ namespace v8cl {
     // void *ptr = *(void**) result[0];
     // Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
     // p.MakeWeak(NULL, IamWeak);
+
+    cout << wrapper->name << ' ';
     return WrapPointer(wrapper->objectTemplate, *(void**) result[0], wrapper->releaseFunction);
   }
 
