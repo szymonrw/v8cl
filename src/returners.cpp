@@ -221,6 +221,8 @@ namespace v8cl {
     case CL_PROGRAM_CONTEXT:
     case CL_KERNEL_CONTEXT:
     case CL_KERNEL_PROGRAM:
+    case CL_EVENT_COMMAND_QUEUE:
+    case CL_EVENT_CONTEXT:
       returner = ReturnPointer;
       break;
     case CL_CONTEXT_DEVICES:
@@ -237,6 +239,7 @@ namespace v8cl {
       returner = ReturnBinaryArray;
       break;
     case CL_PROGRAM_BUILD_STATUS:
+    case CL_EVENT_COMMAND_EXECUTION_STATUS:
       returner = ReturnValue<Integer, int32_t>;
       break;
     }

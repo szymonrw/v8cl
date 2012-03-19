@@ -59,7 +59,10 @@ var f = function() {
   var events = [];
   cl.enqueueWriteBuffer(queue, yd, 0, yh);
   cl.setEventCallback(cl.enqueueWriteBuffer(queue, xd, 0, xh), cl.COMPLETE, null, xh);
-  cl.enqueueNDRangeKernel(queue, axpy, [], [yh.length], [1]);
+  var e = cl.enqueueNDRangeKernel(queue, axpy, [], [yh.length], [1]);
+
+  console.log(cl.getEventInfo(e, cl.EVENT_REFERENCE_COUNT));
+  cl.setEventCallback(e, cl.COMPLETE, null, e);
 
   spitArray(yh, "y");
   console.log("   + 5 *");
@@ -69,9 +72,10 @@ var f = function() {
   //cl.releaseMemObject(yd);
 
   //console.log(events);
-  cl.setEventCallback(cl.enqueueReadBuffer(queue, yd, 0, yh), cl.COMPLETE, function(event, status, data) {
+  cl.setEventCallback(cl.enqueueReadBuffer(queue, yd, 0, yh), cl.COMPLETE, function(e, status, data) {
     console.log("EVENT", status, data);
     spitArray(yh, "y");
+    console.log(cl.getEventInfo(e, cl.EVENT_REFERENCE_COUNT));
     for (var i = 0; i < 1000; ++i) {
       gc();
     }

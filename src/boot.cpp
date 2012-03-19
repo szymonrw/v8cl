@@ -32,6 +32,7 @@ namespace v8cl {
     // { "clGetSamplerInfo", GetInfo, { One<void*>, One<uint32_t> }, ReturnInfo }, // TODO: the same as clGetMemObjectInfo
     { "clGetProgramInfo", GetInfo, { One<void*>, One<uint32_t> }, ReturnInfo },
     { "clGetKernelInfo", GetInfo, { One<void*>, One<uint32_t> }, ReturnInfo },
+    { "clGetEventInfo", GetInfo, { One<void*>, One<uint32_t> }, ReturnInfo },
 
     // Like GetInfo but requirng to objects to query
     { "clGetProgramBuildInfo", GetDependentInfo, { One<void*>, One<void*>, One<uint32_t> }, ReturnInfo },

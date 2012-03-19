@@ -122,6 +122,13 @@ namespace v8cl {
 //                void *          /* param_value */,
 //                size_t *        /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 
+//extern CL_API_ENTRY cl_int CL_API_CALL
+//clGetEventInfo(cl_event         /* event */,
+//               cl_event_info    /* param_name */,
+//               size_t           /* param_value_size */,
+//               void *           /* param_value */,
+//               size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
+
   int32_t GetProgramBinaries (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
 
   int32_t GetInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
@@ -1046,12 +1053,6 @@ namespace v8cl {
 //clWaitForEvents(cl_uint             /* num_events */,
 //                const cl_event *    /* event_list */) CL_API_SUFFIX__VERSION_1_0;
 
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetEventInfo(cl_event         /* event */,
-//               cl_event_info    /* param_name */,
-//               size_t           /* param_value_size */,
-//               void *           /* param_value */,
-//               size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 //                            
 //extern CL_API_ENTRY cl_event CL_API_CALL
 //clCreateUserEvent(cl_context    /* context */,
