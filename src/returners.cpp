@@ -6,6 +6,7 @@ namespace v8cl {
   // Decrease reference count
   void DisposeOpenCLObject (Persistent<Value> value, void* f) {
     cout << "Dispose CL " << (uintptr_t) f ;
+    bool dispose = true;
     if (f && value->IsObject()) {
       Local<Object> object = value->ToObject();
       if (object->InternalFieldCount()) {
@@ -13,16 +14,33 @@ namespace v8cl {
         *(void**) &release = f;
         void *ptr = object->GetPointerFromInternalField(0);
         cout << " " << (uintptr_t) ptr;
-        int32_t error = release(ptr);
+        int32_t error = 0;
+
+        int32_t eventStatus = -1;
+        error = clGetEventInfo(ptr, CL_EVENT_REFERENCE_COUNT, sizeof(int32_t), &eventStatus, NULL);
         if (!error) {
-          cout << " SUCCESS";
-        } else {
-          cout << " ERROR " << error;
+          cout << " EVENT " << eventStatus;
+          if (eventStatus > 0) {
+            dispose = false;
+          }
+        }
+
+        if (dispose) {
+          error = release(ptr);
+          if (!error) {
+            cout << " SUCCESS";
+          } else {
+            cout << " ERROR " << error;
+          }
         }
       }
     }
-    value.Dispose();
-    value.Clear();
+    if (dispose) {
+      value.Dispose();
+      value.Clear();
+    } else {
+      // ?
+    }
     cout << endl;
   }
 

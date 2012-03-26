@@ -158,6 +158,14 @@ namespace v8cl {
     uint32_t errorIdx = 0;
     char firstLetter[2] = " ";
 
+    // tmp
+    *(void**) &clGetEventInfo = dlsym(opencl, "clGetEventInfo");
+    error = dlerror();
+    if (error) {
+      loadingErrors->Set(errorIdx++, String::New(error));
+    }   
+    // tmpend
+
     /// testing
     Handle<FunctionTemplate> gctpl = FunctionTemplate::New(TestGC);
     target->Set(String::New("testgc"), gctpl->GetFunction());
