@@ -1,4 +1,7 @@
 'use strict';
+
+var gc = gc || function() {};
+
 var f = function() {
   var cl = require('cl');
   var util = require('util');
@@ -17,7 +20,7 @@ var f = function() {
     process.stdout.write("\n");
   }
 
-  var yh = new Float64Array(40 * 1024  * 1024);
+  var yh = new Float64Array(40 * 1024/* * 1024*/);
   var xh = new Float64Array(yh.length);
 
   yh[0] = 0;
@@ -51,8 +54,8 @@ var f = function() {
   var yd = cl.createBuffer(context, cl.MEM_READ_WRITE, yh.byteLength);
   var xd = cl.createBuffer(context, cl.MEM_READ_ONLY, xh.byteLength);
 
-  cl.setKernelArg(axpy, 0, 8, yd);
-  cl.setKernelArg(axpy, 1, 8, xd);
+  cl.setKernelArg(axpy, 0, 4, yd);
+  cl.setKernelArg(axpy, 1, 4, xd);
   cl.setKernelArg(axpy, 2, 8, new Float64Array([5]));
   // cl.setKernelArg(axpy, 2, 8, new Buffer([127,255,255,4,5,6,7,255]));
 
@@ -86,12 +89,19 @@ var f = function() {
 
 };
 
-f();
 
-for (var i = 0; i < 1000; ++i) {
-  gc();
+setTimeout(function() {
+   console.log("bye");
+   gc();
+},30000);
+
+try {
+  f();
+} catch (e) {
+  console.log(e);
+  console.log(e.stack);
 }
 
-// setTimeout(function() {
-//   console.log("bye");
-// },30000);
+for (var i = 0; i < 10; ++i) {
+  gc();
+}

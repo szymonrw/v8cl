@@ -9,6 +9,12 @@
 
 #include <v8.h>
 
+#ifdef _WIN32
+#define CALL __stdcall
+#else
+#define CALL
+#endif
+
 namespace v8cl {
   using namespace v8;
   using namespace std;
@@ -135,8 +141,6 @@ namespace v8cl {
 
   // tmp
   void PrintBinaryData(void* data, size_t size);
-
-  static int32_t (*clGetEventInfo) (void*, uint32_t, size_t, void*, size_t*) = 0;
 }
 
 #endif

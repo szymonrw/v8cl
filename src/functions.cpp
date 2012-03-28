@@ -48,7 +48,7 @@ namespace v8cl {
 //clFinish(cl_command_queue /* command_queue */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t OneArgFn (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clFn) (void* smth);
+    int32_t (CALL *clFn) (void* smth);
     *(void**) &clFn = wrapper->f;
 
     void* smth = *(void**) natives[0];
@@ -137,7 +137,7 @@ namespace v8cl {
       return GetProgramBinaries(wrapper, natives, result);
     }
 
-    int32_t (*clGetInfo) (void*, uint32_t, size_t, void*, size_t*);
+    int32_t (CALL *clGetInfo) (void*, uint32_t, size_t, void*, size_t*);
     *(void**) &clGetInfo = wrapper->f;
 
     void *object = *(void**) natives[0];
@@ -160,7 +160,7 @@ namespace v8cl {
   }
 
   int32_t GetProgramBinaries (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clGetInfo) (void*, uint32_t, size_t, void*, size_t*);
+    int32_t (CALL *clGetInfo) (void*, uint32_t, size_t, void*, size_t*);
     *(void**) &clGetInfo = wrapper->f;
 
     void *object = *(void**) natives[0];
@@ -220,7 +220,7 @@ namespace v8cl {
 //                         size_t *                   /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t GetDependentInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clGetDependentInfo) (void*, void*, uint32_t, size_t, void*, size_t*);
+    int32_t (CALL *clGetDependentInfo) (void*, void*, uint32_t, size_t, void*, size_t*);
     *(void**) &clGetDependentInfo = wrapper->f;
 
     void *main = *(void**) natives[0];
@@ -255,7 +255,7 @@ namespace v8cl {
 
 
   int32_t GetSupportedImageFormats (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clGetSupportedImageFormats) (void*, uint64_t, uint32_t, uint32_t, cl_image_format*, uint32_t*);
+    int32_t (CALL *clGetSupportedImageFormats) (void*, uint64_t, uint32_t, uint32_t, cl_image_format*, uint32_t*);
     *(void**) &clGetSupportedImageFormats = wrapper->f;
 
     void *context = *(void**) natives[0];
@@ -284,7 +284,7 @@ namespace v8cl {
 //                 cl_uint *        /* num_platforms */) CL_API_SUFFIX__VERSION_1_0;
   
   int32_t GetPlatformIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clGetPlatformIDs) (size_t, void*, size_t*);
+    int32_t (CALL *clGetPlatformIDs) (size_t, void*, size_t*);
     *(void**) &clGetPlatformIDs = wrapper->f;
     
     size_t size = 0;
@@ -315,7 +315,7 @@ namespace v8cl {
 //               cl_uint *        /* num_devices */) CL_API_SUFFIX__VERSION_1_0;
   
   int32_t GetDeviceIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clGetDeviceIDs) (void*, uint64_t, size_t, void*, size_t*);
+    int32_t (CALL *clGetDeviceIDs) (void*, uint64_t, size_t, void*, size_t*);
     *(void**) &clGetDeviceIDs = wrapper->f;
 
     void *platform = *(void**) natives[0];
@@ -351,7 +351,7 @@ namespace v8cl {
 //                cl_int *                      /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t CreateContext (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateContext) (intptr_t*, uint32_t, void*, void*, void*, int32_t*);
+    void* (CALL *clCreateContext) (intptr_t*, uint32_t, void*, void*, void*, int32_t*);
     *(void**) &clCreateContext = wrapper->f;
     
     intptr_t *properties = (intptr_t*) natives[0];
@@ -382,7 +382,7 @@ namespace v8cl {
 //                        cl_int *                      /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t CreateContextFromType (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateContextFromType) (intptr_t*, uint64_t, void*, void*, int32_t*);
+    void* (CALL *clCreateContextFromType) (intptr_t*, uint64_t, void*, void*, int32_t*);
     *(void**) &clCreateContextFromType = wrapper->f;
 
     intptr_t *properties = (intptr_t*) natives[0];
@@ -411,7 +411,7 @@ namespace v8cl {
 //                     cl_int *                       /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t CreateCommandQueue (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateCommandQueue) (void*, void*, uint64_t, int32_t*);
+    void* (CALL *clCreateCommandQueue) (void*, void*, uint64_t, int32_t*);
     *(void**) &clCreateCommandQueue = wrapper->f;
 
     void *context = *(void**) natives[0];
@@ -440,7 +440,7 @@ namespace v8cl {
 //               void *       /* host_ptr */,
 //               cl_int *     /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateBuffer) (void*, uint64_t, size_t, void*, int32_t*);
+    void* (CALL *clCreateBuffer) (void*, uint64_t, size_t, void*, int32_t*);
     *(void**) &clCreateBuffer = wrapper->f;
 
     void *context = *(void**) natives[0];
@@ -467,7 +467,7 @@ namespace v8cl {
 //                  const void *             /* buffer_create_info */,
 //                  cl_int *                 /* errcode_ret */) CL_API_SUFFIX__VERSION_1_1;
   int32_t CreateSubBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateSubBuffer) (void*, uint64_t, uint32_t, void*, int32_t*);
+    void* (CALL *clCreateSubBuffer) (void*, uint64_t, uint32_t, void*, int32_t*);
     *(void**) &clCreateSubBuffer = wrapper->f;
 
     void *mem = *(void**) natives[0];
@@ -496,7 +496,7 @@ namespace v8cl {
 //                void *                  /* host_ptr */,
 //                cl_int *                /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateImage2D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateImage2D) (void*, uint64_t, cl_image_format*, size_t, size_t, size_t, void*, int32_t*);
+    void* (CALL *clCreateImage2D) (void*, uint64_t, cl_image_format*, size_t, size_t, size_t, void*, int32_t*);
     *(void**) &clCreateImage2D = wrapper->f;
 
     void *context = *(void**) natives[0];
@@ -530,7 +530,7 @@ namespace v8cl {
 //                void *                  /* host_ptr */,
 //                cl_int *                /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateImage3D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateImage3D) (void*, uint64_t, cl_image_format*, size_t, size_t, size_t, size_t, size_t, void*, int32_t*);
+    void* (CALL *clCreateImage3D) (void*, uint64_t, cl_image_format*, size_t, size_t, size_t, size_t, size_t, void*, int32_t*);
     *(void**) &clCreateImage3D = wrapper->f;
 
     void *context = *(void**) natives[0];
@@ -562,7 +562,7 @@ namespace v8cl {
 //                cl_filter_mode      /* filter_mode */,
 //                cl_int *            /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateSampler (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateSampler) (void*, uint32_t, uint32_t, uint32_t, int32_t*);
+    void* (CALL *clCreateSampler) (void*, uint32_t, uint32_t, uint32_t, int32_t*);
     *(void**) &clCreateSampler = wrapper->f;
 
     void *context = *(void**) natives[0];
@@ -586,7 +586,7 @@ namespace v8cl {
 //                          const size_t *    /* lengths */,
 //                          cl_int *          /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateProgramWithSource (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateProgramWithSource) (void*, uint32_t, char**, size_t*, int32_t*);
+    void* (CALL *clCreateProgramWithSource) (void*, uint32_t, char**, size_t*, int32_t*);
     *(void**) &clCreateProgramWithSource = wrapper->f;
 
     void *context = *(void**) natives[0];
@@ -610,7 +610,7 @@ namespace v8cl {
 //               void (CL_CALLBACK *  /* pfn_notify */)(cl_program /* program */, void * /* user_data */),
 //               void *               /* user_data */) CL_API_SUFFIX__VERSION_1_0;
   int32_t BuildProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clBuildProgram) (void*, uint32_t, void*, char*, void*, void*);
+    int32_t (CALL *clBuildProgram) (void*, uint32_t, void*, char*, void*, void*);
     *(void**) &clBuildProgram = wrapper->f;
 
     void *program = *(void**) natives[0];
@@ -630,7 +630,7 @@ namespace v8cl {
 //               const char *    /* kernel_name */,
 //               cl_int *        /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    void* (*clCreateKernel) (void*, char*, int32_t*);
+    void* (CALL *clCreateKernel) (void*, char*, int32_t*);
     *(void**) &clCreateKernel = wrapper->f;
 
     void *program = *(void**) natives[0];
@@ -650,7 +650,7 @@ namespace v8cl {
 //                         cl_kernel *    /* kernels */,
 //                         cl_uint *      /* num_kernels_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateKernelsInProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clCreateKernelsInProgram) (void*, uint32_t, void*, uint32_t*);
+    int32_t (CALL *clCreateKernelsInProgram) (void*, uint32_t, void*, uint32_t*);
     *(void**) &clCreateKernelsInProgram = wrapper->f;
 
     void *program = *(void**) natives[0];
@@ -678,7 +678,7 @@ namespace v8cl {
 //               size_t       /* arg_size */,
 //               const void * /* arg_value */) CL_API_SUFFIX__VERSION_1_0;
   int32_t SetKernelArg (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clSetKernelArg) (void*, uint32_t, size_t, void*);
+    int32_t (CALL *clSetKernelArg) (void*, uint32_t, size_t, void*);
     *(void**) &clSetKernelArg = wrapper->f;
 
     void *kernel = *(void**) natives[0];
@@ -717,7 +717,7 @@ namespace v8cl {
 //                     cl_event *         /* event */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t EnqueueReadOrWriteBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clEnqueueReadOrWriteBuffer) (void*, void*, uint32_t, size_t, size_t, void*, uint32_t, void*, void*);
+    int32_t (CALL *clEnqueueReadOrWriteBuffer) (void*, void*, uint32_t, size_t, size_t, void*, uint32_t, void*, void*);
     *(void**) &clEnqueueReadOrWriteBuffer = wrapper->f;
 
     void *queue = *(void**) natives[0];
@@ -743,7 +743,7 @@ namespace v8cl {
 //                       const cl_event * /* event_wait_list */,
 //                       cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;
   int32_t EnqueueNDRangeKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clEnqueueNDRangeKernel) (void*, void*, uint32_t, size_t*, size_t*, size_t*, uint32_t, void*, void*);
+    int32_t (CALL *clEnqueueNDRangeKernel) (void*, void*, uint32_t, size_t*, size_t*, size_t*, uint32_t, void*, void*);
     *(void**) &clEnqueueNDRangeKernel = wrapper->f;
 
     void *queue = *(void**) natives[0];
@@ -808,7 +808,7 @@ namespace v8cl {
   }
 
   int32_t SetEventCallback (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    int32_t (*clSetEventCallback) (void*, int32_t, pfn_notify, void*);
+    int32_t (CALL *clSetEventCallback) (void*, int32_t, pfn_notify, void*);
     *(void**) &clSetEventCallback = wrapper->f;
 
     void *event = *(void**) natives[0];

@@ -1,7 +1,43 @@
 #include "v8cl.h"
 #include "constants.h"
-#include <dlfcn.h>
 #include <iostream>
+
+#ifndef _WIN32
+#include <dlfcn.h>
+#define V8CL_OPENCL_LIB "libOpenCL.so"
+#else
+#include <windows.h>
+#define V8CL_OPENCL_LIB "OpenCL.dll"
+#define RTLD_LAZY 0
+#define RTLD_LOCAL 0
+
+static const char* dl_error = NULL;
+const char* dlerror() {
+  const char* err = dl_error;
+  dl_error = NULL;
+  return err;
+}
+
+void* dlopen(const char* libname, int flags) {
+  void* lib = LoadLibrary(libname);
+  if (!lib) {
+    dl_error = libname;
+    return NULL;
+  } else {
+    return lib;
+  }
+}
+
+void* dlsym (void* lib, const char* name) {
+  void* fn = GetProcAddress((HINSTANCE) lib, name);
+  if (!fn) {
+    dl_error = name;
+    return NULL;
+  } else {
+    return fn;
+  }
+}
+#endif
 
 namespace v8cl {
   
@@ -61,6 +97,8 @@ namespace v8cl {
     { "clSetEventCallback", SetEventCallback, { One<void*>, One<int32_t>, Persist, Persist } },
     { NULL }
   };
+
+  int32_t (CALL *clGetEventInfo) (void*, uint32_t, size_t, void*, size_t*) = NULL;
 
   map<int, const char*> errorCodes = GetErrorCodes();
   
@@ -147,8 +185,9 @@ namespace v8cl {
     Handle<Array> loadingErrors = Array::New();
     target->Set(String::New("loadingErrors"), loadingErrors);
 
-    char* error = dlerror(); // clear any previous errors
-    void* opencl = dlopen("libOpenCL.so", RTLD_LAZY | RTLD_LOCAL);
+    const char *error = NULL;
+    error = dlerror(); // clear any previous errors
+    void *opencl = dlopen(V8CL_OPENCL_LIB, RTLD_LAZY | RTLD_LOCAL);
     error = dlerror();
     if (error) {
       loadingErrors->Set(0, String::New(error));

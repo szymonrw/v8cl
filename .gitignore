@@ -9,3 +9,6 @@ node_modules
 deps
 ipch
 *.sublime-*
+v8cl.sdf
+v8cl.opensdf
+v8cl.suo

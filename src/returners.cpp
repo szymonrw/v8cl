@@ -2,6 +2,7 @@
 #include "constants.h"
 
 namespace v8cl {
+  extern int32_t (CALL *clGetEventInfo) (void*, uint32_t, size_t, void*, size_t*);
 
   // Decrease reference count
   void DisposeOpenCLObject (Persistent<Value> value, void* f) {
@@ -10,12 +11,13 @@ namespace v8cl {
     if (f && value->IsObject()) {
       Local<Object> object = value->ToObject();
       if (object->InternalFieldCount()) {
-        int32_t (*release) (void* smth);
+        int32_t (CALL *release) (void* smth);
         *(void**) &release = f;
         void *ptr = object->GetPointerFromInternalField(0);
         cout << " " << (uintptr_t) ptr;
         int32_t error = 0;
 
+        if(clGetEventInfo) {
         int32_t eventStatus = -1;
         error = clGetEventInfo(ptr, CL_EVENT_REFERENCE_COUNT, sizeof(int32_t), &eventStatus, NULL);
         if (!error) {
@@ -23,6 +25,7 @@ namespace v8cl {
           if (eventStatus > 0) {
             dispose = false;
           }
+        }
         }
 
         if (dispose) {
@@ -39,7 +42,7 @@ namespace v8cl {
       value.Dispose();
       value.Clear();
     } else {
-      // ?
+      value.MakeWeak(f, DisposeOpenCLObject);
     }
     cout << endl;
   }

@@ -35,11 +35,12 @@ namespace v8cl {
     return value->Int32Value();
   }
 
-
+#ifndef _WIN32
   template<>
   size_t Get<size_t> (Handle<Value> value) {
     return value->IntegerValue();
   }
+#endif
 
   template<typename T>
   void One (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
