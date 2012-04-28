@@ -1,7 +1,7 @@
 INCLUDES = /usr/include/node
 CXX_FLAGS = -g -Wall -fPIC -DPIC -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I$(INCLUDES) -D_WITH_NODE
 
-NODE_TARGET = node_modules/cl.node
+NODE_TARGET = ../node_modules/cl.node
 NODE_GLUE = src/node/node_glue.cpp
 
 INPUTS = $(wildcard src/*.cpp)
