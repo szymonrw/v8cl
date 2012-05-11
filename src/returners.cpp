@@ -51,7 +51,7 @@ namespace v8cl {
     // Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
     Persistent<Object> p = Persistent<Object>::New(tpl->NewInstance());
     p->SetPointerInInternalField(0, ptr);
-    cout << "PTROUT " << (uintptr_t) ptr << endl;
+    //cout << "PTROUT " << (uintptr_t) ptr << endl;
     p.MakeWeak(retainer, DisposeOpenCLObject);
     return p;
   }

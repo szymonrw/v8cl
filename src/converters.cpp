@@ -19,7 +19,7 @@ namespace v8cl {
       Local<Object> object = value->ToObject();
       if (object->InternalFieldCount()) {
         ptr = object->GetPointerFromInternalField(0);
-        cout << "PTR IN " << (uintptr_t) ptr << endl;
+        //cout << "PTR IN " << (uintptr_t) ptr << endl;
       }
     }
     return ptr;
