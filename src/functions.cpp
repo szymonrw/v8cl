@@ -659,7 +659,7 @@ namespace v8cl {
     int32_t error = clCreateKernelsInProgram(program, 0, NULL, &size);
     if (error) return error;
 
-    void *kernels = malloc(size);
+    void *kernels = malloc(size * sizeof(void*));
     error = clCreateKernelsInProgram(program, size, kernels, 0);
     if (error) {
       free(kernels);

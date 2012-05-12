@@ -4,7 +4,7 @@
     <LocalDebuggerCommand>$(ProjectDir)deps\node-v0.6.14\Debug\node.exe</LocalDebuggerCommand>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>--expose-gc tests\axpy.js</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>--expose-gc tests\kernels.js</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
