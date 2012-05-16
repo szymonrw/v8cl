@@ -6,7 +6,6 @@ build
 Debug
 Release
 node_modules
-deps
 ipch
 *.sublime-*
 v8cl.sdf

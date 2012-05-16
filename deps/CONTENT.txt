@@ -1,0 +1,10 @@
+The two files (node.lib and node.pdb) comes from:
+  http://nodejs.org/dist/v0.6.18/
+
+Content of directory 'include' is files from source code of node.js from
+directories:
+
+  - deps/uv/include
+  - deps/v8/include
+  - src (only *.h files)
+
