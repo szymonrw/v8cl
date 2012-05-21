@@ -1,6 +1,9 @@
 The two files (node.lib and node.pdb) comes from:
   http://nodejs.org/dist/v0.6.18/
 
+The most convenient place for node.pdb is in the same directory as node.exe
+binary. This way debugger will find file automatically.
+
 Content of directory 'include' is files from source code of node.js from
 directories:
 
