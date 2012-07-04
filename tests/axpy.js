@@ -20,7 +20,7 @@ var f = function() {
     process.stdout.write("\n");
   }
 
-  var yh = new Float64Array(40 * 1024/* * 1024*/);
+  var yh = new Float64Array(40 * 1024 /* 1024*/);
   var xh = new Float64Array(yh.length);
 
   yh[0] = 0;
@@ -54,54 +54,49 @@ var f = function() {
   var yd = cl.createBuffer(context, cl.MEM_READ_WRITE, yh.byteLength);
   var xd = cl.createBuffer(context, cl.MEM_READ_ONLY, xh.byteLength);
 
-  cl.setKernelArg(axpy, 0, 4, yd);
-  cl.setKernelArg(axpy, 1, 4, xd);
+  cl.setKernelArg(axpy, 0, 8, yd);
+  cl.setKernelArg(axpy, 1, 8, xd);
   cl.setKernelArg(axpy, 2, 8, new Float64Array([5]));
   // cl.setKernelArg(axpy, 2, 8, new Buffer([127,255,255,4,5,6,7,255]));
 
-  var events = [];
   cl.enqueueWriteBuffer(queue, yd, 0, yh);
   cl.setEventCallback(cl.enqueueWriteBuffer(queue, xd, 0, xh), cl.COMPLETE, null, xh);
-  var e = cl.enqueueNDRangeKernel(queue, axpy, [], [yh.length], [1]);
+  cl.enqueueNDRangeKernel(queue, axpy, [], [yh.length], [1]);
 
-  console.log(cl.getEventInfo(e, cl.EVENT_REFERENCE_COUNT));
-  cl.setEventCallback(e, cl.COMPLETE, null, e);
+  //console.log(cl.getEventInfo(e, cl.EVENT_REFERENCE_COUNT));
+  //cl.setEventCallback(e, cl.COMPLETE, null, e);
 
   spitArray(yh, "y");
   console.log("   + 5 *");
   spitArray(xh, "x");
   console.log("   =");
 
-  //cl.releaseMemObject(yd);
-
-  //console.log(events);
-  cl.setEventCallback(cl.enqueueReadBuffer(queue, yd, 0, yh), cl.COMPLETE, function(e, status, data) {
-    console.log("EVENT", status, data);
+  var event = cl.enqueueReadBuffer(queue, yd, 0, yh);
+  event.test = "asdf";
+  cl.setEventCallback(event, cl.COMPLETE, function(e, status, data) {
+    console.log("EVENT", e, status, data);
     spitArray(yh, "y");
     console.log(cl.getEventInfo(e, cl.EVENT_REFERENCE_COUNT));
+    console.log(e === event);
     for (var i = 0; i < 1000; ++i) {
       gc();
     }
   }, ["to są dane", 1,2,3]);
 
-  // cl.finish(queue);
   cl.flush(queue);
-
 };
 
 
 setTimeout(function() {
    console.log("bye");
-   gc();
-},30000);
 
-try {
-  f();
-} catch (e) {
-  console.log(e);
-  console.log(e.stack);
-}
+  for (var i = 0; i < 10; ++i) {
+    gc();
+  }
+}, 15000);
 
+
+f();
 for (var i = 0; i < 10; ++i) {
   gc();
 }

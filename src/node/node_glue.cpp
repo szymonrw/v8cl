@@ -1,11 +1,8 @@
 #include "../v8cl.h"
 #include <node.h>
-#include <vector>
 
 using namespace v8cl;
 
-vector<uv_async_t*> handles;
-vector<EventHandler*> handlers;
 
 // Function called in OpenCL-spawned thread
 void ShakeNodeEventLoop (void* uv_handle) {
@@ -25,9 +22,8 @@ static void InvokeHandler (uv_async_t* handle, int status) {
 static void* RegisterHandler (EventHandler* handler) {
   uv_async_t *uv_handle = (uv_async_t*) malloc(sizeof(uv_async_t));
   uv_async_init(uv_default_loop(), uv_handle, InvokeHandler);
+  cout << "UV_HANDLE_TYPE " << uv_handle->type << endl;
   uv_handle->data = handler;
-  handles.push_back(uv_handle);
-  handlers.push_back(handler);
   return uv_handle;
 }
 

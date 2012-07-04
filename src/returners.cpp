@@ -17,16 +17,16 @@ namespace v8cl {
         cout << " " << (uintptr_t) ptr;
         int32_t error = 0;
 
-        if(clGetEventInfo) {
-        int32_t eventStatus = -1;
-        error = clGetEventInfo(ptr, CL_EVENT_REFERENCE_COUNT, sizeof(int32_t), &eventStatus, NULL);
-        if (!error) {
-          cout << " EVENT " << eventStatus;
-          if (eventStatus > 0) {
-            dispose = false;
-          }
-        }
-        }
+        // if (clGetEventInfo) {
+        //   int32_t eventStatus = -1;
+        //   error = clGetEventInfo(ptr, CL_EVENT_REFERENCE_COUNT, sizeof(int32_t), &eventStatus, NULL);
+        //   if (!error) {
+        //     cout << " EVENT " << eventStatus;
+        //     if (eventStatus > 0) {
+        //       dispose = false;
+        //     }
+        //   }
+        // }
 
         if (dispose) {
           error = release(ptr);
@@ -58,7 +58,7 @@ namespace v8cl {
 
   Handle<Value> ReturnPointerArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     Local<Array> array = Array::New();
-    
+
     void **nativeArray = (void**) result[0];
     size_t size = 0;
     if (result.size() > 1) size = *(size_t*) result[1] / sizeof(void*);
@@ -100,7 +100,7 @@ namespace v8cl {
 
     cl_image_format *formats = (cl_image_format*) result[0];
     uint32_t size = 0;
-    if (result.size() > 1) size = *(uint32_t*) result[1]; 
+    if (result.size() > 1) size = *(uint32_t*) result[1];
 
     for (uint32_t i = 0; i < size; ++i) {
       Handle<Object> obj = Object::New();
@@ -114,11 +114,11 @@ namespace v8cl {
 
   Handle<Value> ReturnImageFormat (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     cl_image_format *format = (cl_image_format*) result[0];
-    
+
     Handle<Object> obj = Object::New();
     obj->Set(String::New("image_channel_order"), Uint32::New(format->image_channel_order));
     obj->Set(String::New("image_channel_data_type"), Uint32::New(format->image_channel_data_type));
-  
+
     return obj;
   }
 
@@ -127,9 +127,9 @@ namespace v8cl {
     if (!nativeArray) {
       return Null();
     }
-    
+
     Handle<Array> array = Array::New();
-    
+
     size_t size = 0;
     if (result.size() > 1) size = *(size_t*) result[1] / sizeof(intptr_t*) - 1;
 
@@ -137,7 +137,7 @@ namespace v8cl {
       // TODO: loss of precision?
       array->Set(i, Integer::New(nativeArray[i]));
     }
-    
+
     return array;
   }
 
@@ -151,11 +151,11 @@ namespace v8cl {
     NativeType value = *(NativeType*) result[0];
     return JSType::New(value);
   }
-  
+
   template<typename JSType, typename NativeType>
   Handle<Value> ReturnArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     Handle<Array> array = Array::New();
-    
+
     NativeType *nativeArray = (NativeType*) result[0];
     size_t size = 0;
     if (result.size() > 1) size = (*(size_t*) result[1]) / sizeof(NativeType);
@@ -204,10 +204,10 @@ namespace v8cl {
     case CL_DEVICE_PROFILING_TIMER_RESOLUTION:
     case CL_MEM_SIZE:
     case CL_MEM_OFFSET:
-    case CL_IMAGE_ELEMENT_SIZE: 
-    case CL_IMAGE_ROW_PITCH: 
+    case CL_IMAGE_ELEMENT_SIZE:
+    case CL_IMAGE_ROW_PITCH:
     case CL_IMAGE_SLICE_PITCH:
-    case CL_IMAGE_WIDTH: 
+    case CL_IMAGE_WIDTH:
     case CL_IMAGE_HEIGHT:
     case CL_IMAGE_DEPTH:
     case CL_KERNEL_WORK_GROUP_SIZE:
@@ -256,7 +256,7 @@ namespace v8cl {
     case CL_IMAGE_FORMAT:
       returner = ReturnImageFormat;
       break;
-    case CL_PROGRAM_BINARIES: 
+    case CL_PROGRAM_BINARIES:
       returner = ReturnBinaryArray;
       break;
     case CL_PROGRAM_BUILD_STATUS:

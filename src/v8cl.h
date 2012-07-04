@@ -33,7 +33,7 @@ namespace v8cl {
 
     `shake` needs to queue the event in event loop. It's responsibility is to cause invokation of InvokeBackInEventLoop(EventHandler*) _inside_ the event loop and clean up any implementation specific state (at any time after the event).
 
-    `shake` is possibly invoked in auxiliary thread so it needs to be thread-safe. 
+    `shake` is possibly invoked in auxiliary thread so it needs to be thread-safe.
   */
   struct EventSupport {
     void* (*add) (EventHandler* handler);
@@ -46,7 +46,8 @@ namespace v8cl {
     EventSupport events;
     Persistent<Value> f;
     Persistent<Value> data;
-    void* event;
+    Persistent<Value> event;
+    //void* event;
     int32_t type;
     void* impl_handle;
   };
@@ -63,7 +64,7 @@ namespace v8cl {
     void *releaseFunction;
     EventSupport events;
   };
-  
+
   // Functions
   int32_t OneArgFn (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   int32_t GetInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
@@ -87,7 +88,7 @@ namespace v8cl {
   int32_t EnqueueReadOrWriteBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   int32_t EnqueueNDRangeKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
   int32_t SetEventCallback (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  
+
   // Converters
   template<typename T>
   void One (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
@@ -138,6 +139,10 @@ namespace v8cl {
     *ptr = value;
     result.push_back(ptr);
   }
+
+
+  template<typename T>
+  T Get (Handle<Value> value);
 
   // tmp
   void PrintBinaryData(void* data, size_t size);

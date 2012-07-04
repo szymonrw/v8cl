@@ -39,7 +39,7 @@ namespace v8cl {
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clReleaseKernel(cl_kernel   /* kernel */) CL_API_SUFFIX__VERSION_1_0;
 
-//                                
+//
 ///* Flush and Finish APIs */
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clFlush(cl_command_queue /* command_queue */) CL_API_SUFFIX__VERSION_1_0;
@@ -52,29 +52,29 @@ namespace v8cl {
     *(void**) &clFn = wrapper->f;
 
     void* smth = *(void**) natives[0];
-    
+
     return clFn(smth);
   }
 
-//extern CL_API_ENTRY cl_int CL_API_CALL 
-//clGetPlatformInfo(cl_platform_id   /* platform */, 
+//extern CL_API_ENTRY cl_int CL_API_CALL
+//clGetPlatformInfo(cl_platform_id   /* platform */,
 //                  cl_platform_info /* param_name */,
-//                  size_t           /* param_value_size */, 
+//                  size_t           /* param_value_size */,
 //                  void *           /* param_value */,
 //                  size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clGetDeviceInfo(cl_device_id    /* device */,
-//                cl_device_info  /* param_name */, 
-//                size_t          /* param_value_size */, 
+//                cl_device_info  /* param_name */,
+//                size_t          /* param_value_size */,
 //                void *          /* param_value */,
 //                size_t *        /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 
     //extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetContextInfo(cl_context         /* context */, 
-//                 cl_context_info    /* param_name */, 
-//                 size_t             /* param_value_size */, 
-//                 void *             /* param_value */, 
+//clGetContextInfo(cl_context         /* context */,
+//                 cl_context_info    /* param_name */,
+//                 size_t             /* param_value_size */,
+//                 void *             /* param_value */,
 //                 size_t *           /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 
 //extern CL_API_ENTRY cl_int CL_API_CALL
@@ -84,17 +84,17 @@ namespace v8cl {
 //                      void *                /* param_value */,
 //                      size_t *              /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 
-//                                    
+//
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clGetMemObjectInfo(cl_mem           /* memobj */,
-//                   cl_mem_info      /* param_name */, 
+//                   cl_mem_info      /* param_name */,
 //                   size_t           /* param_value_size */,
 //                   void *           /* param_value */,
 //                   size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clGetImageInfo(cl_mem           /* image */,
-//               cl_image_info    /* param_name */, 
+//               cl_image_info    /* param_name */,
 //               size_t           /* param_value_size */,
 //               void *           /* param_value */,
 //               size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
@@ -106,7 +106,7 @@ namespace v8cl {
 //                 size_t             /* param_value_size */,
 //                 void *             /* param_value */,
 //                 size_t *           /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-//                            
+//
 
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clGetProgramInfo(cl_program         /* program */,
@@ -141,7 +141,7 @@ namespace v8cl {
     *(void**) &clGetInfo = wrapper->f;
 
     void *object = *(void**) natives[0];
-    
+
     size_t size = 0;
     int32_t error = clGetInfo(object, param_name, 0, NULL, &size);
     if (error) return error;
@@ -188,7 +188,7 @@ namespace v8cl {
         free(binaries[0]);
         free(binaries);
         return error;
-      } 
+      }
     }
 
     result.push_back(sizes);
@@ -209,7 +209,7 @@ namespace v8cl {
 //                      size_t                /* param_value_size */,
 //                      void *                /* param_value */,
 //                      size_t *              /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-//                         
+//
 
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clGetKernelWorkGroupInfo(cl_kernel                  /* kernel */,
@@ -282,15 +282,15 @@ namespace v8cl {
 //clGetPlatformIDs(cl_uint          /* num_entries */,
 //                 cl_platform_id * /* platforms */,
 //                 cl_uint *        /* num_platforms */) CL_API_SUFFIX__VERSION_1_0;
-  
+
   int32_t GetPlatformIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clGetPlatformIDs) (size_t, void*, size_t*);
     *(void**) &clGetPlatformIDs = wrapper->f;
-    
+
     size_t size = 0;
     int32_t error = clGetPlatformIDs(0, NULL, &size);
     if (error) return error;
-    
+
     void *platforms = malloc(sizeof(void*) * size);
     error = clGetPlatformIDs(size, platforms, NULL);
     if (error) {
@@ -299,7 +299,7 @@ namespace v8cl {
     }
 
     result.push_back(platforms);
-    
+
     PushBackWrapped(result, size * sizeof(void*));
     // size_t *sizePtr = (size_t*) malloc(sizeof(size));
     // *sizePtr = size * sizeof(void*);
@@ -309,11 +309,11 @@ namespace v8cl {
 
   //extern CL_API_ENTRY cl_int CL_API_CALL
 //clGetDeviceIDs(cl_platform_id   /* platform */,
-//               cl_device_type   /* device_type */, 
-//               cl_uint          /* num_entries */, 
-//               cl_device_id *   /* devices */, 
+//               cl_device_type   /* device_type */,
+//               cl_uint          /* num_entries */,
+//               cl_device_id *   /* devices */,
 //               cl_uint *        /* num_devices */) CL_API_SUFFIX__VERSION_1_0;
-  
+
   int32_t GetDeviceIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clGetDeviceIDs) (void*, uint64_t, size_t, void*, size_t*);
     *(void**) &clGetDeviceIDs = wrapper->f;
@@ -325,7 +325,7 @@ namespace v8cl {
     size_t size = 0;
     int32_t error = clGetDeviceIDs(platform, device_type, 0, NULL, &size);
     if (error) return error;
-    
+
     void *devices = malloc(sizeof(void*) * size);
     error = clGetDeviceIDs(platform, device_type, size, devices, NULL);
     if (error) {
@@ -334,7 +334,7 @@ namespace v8cl {
     }
 
     result.push_back(devices);
-    
+
     PushBackWrapped(result, size * sizeof(void*));
     // size_t *sizeHolder = (size_t*) malloc(sizeof(size));
     // *sizeHolder = size * sizeof(void*);
@@ -353,9 +353,9 @@ namespace v8cl {
   int32_t CreateContext (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateContext) (intptr_t*, uint32_t, void*, void*, void*, int32_t*);
     *(void**) &clCreateContext = wrapper->f;
-    
+
     intptr_t *properties = (intptr_t*) natives[0];
-      
+
     void *devices = natives[1];
     size_t size = *(size_t*) natives[2];
 
@@ -386,9 +386,9 @@ namespace v8cl {
     *(void**) &clCreateContextFromType = wrapper->f;
 
     intptr_t *properties = (intptr_t*) natives[0];
-       
+
     uint32_t device_type = *(uint32_t*) natives[1];
-   
+
     int32_t error = 0;
     // sprawdzic w zad801
     void *context = clCreateContextFromType(properties, device_type, NULL, NULL, &error);
@@ -405,8 +405,8 @@ namespace v8cl {
 
 ///* Command Queue APIs */
 //extern CL_API_ENTRY cl_command_queue CL_API_CALL
-//clCreateCommandQueue(cl_context                     /* context */, 
-//                     cl_device_id                   /* device */, 
+//clCreateCommandQueue(cl_context                     /* context */,
+//                     cl_device_id                   /* device */,
 //                     cl_command_queue_properties    /* properties */,
 //                     cl_int *                       /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
 
@@ -492,7 +492,7 @@ namespace v8cl {
 //                const cl_image_format * /* image_format */,
 //                size_t                  /* image_width */,
 //                size_t                  /* image_height */,
-//                size_t                  /* image_row_pitch */, 
+//                size_t                  /* image_row_pitch */,
 //                void *                  /* host_ptr */,
 //                cl_int *                /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateImage2D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
@@ -517,16 +517,16 @@ namespace v8cl {
     return 0;
   }
 
-//                        
+//
 //extern CL_API_ENTRY cl_mem CL_API_CALL
 //clCreateImage3D(cl_context              /* context */,
 //                cl_mem_flags            /* flags */,
 //                const cl_image_format * /* image_format */,
-//                size_t                  /* image_width */, 
+//                size_t                  /* image_width */,
 //                size_t                  /* image_height */,
-//                size_t                  /* image_depth */, 
-//                size_t                  /* image_row_pitch */, 
-//                size_t                  /* image_slice_pitch */, 
+//                size_t                  /* image_depth */,
+//                size_t                  /* image_row_pitch */,
+//                size_t                  /* image_slice_pitch */,
 //                void *                  /* host_ptr */,
 //                cl_int *                /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateImage3D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
@@ -557,8 +557,8 @@ namespace v8cl {
 ///* Sampler APIs  */
 //extern CL_API_ENTRY cl_sampler CL_API_CALL
 //clCreateSampler(cl_context          /* context */,
-//                cl_bool             /* normalized_coords */, 
-//                cl_addressing_mode  /* addressing_mode */, 
+//                cl_bool             /* normalized_coords */,
+//                cl_addressing_mode  /* addressing_mode */,
 //                cl_filter_mode      /* filter_mode */,
 //                cl_int *            /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateSampler (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
@@ -606,7 +606,7 @@ namespace v8cl {
 //clBuildProgram(cl_program           /* program */,
 //               cl_uint              /* num_devices */,
 //               const cl_device_id * /* device_list */,
-//               const char *         /* options */, 
+//               const char *         /* options */,
 //               void (CL_CALLBACK *  /* pfn_notify */)(cl_program /* program */, void * /* user_data */),
 //               void *               /* user_data */) CL_API_SUFFIX__VERSION_1_0;
   int32_t BuildProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
@@ -623,7 +623,7 @@ namespace v8cl {
     return error;
   }
 
- 
+
 ///* Kernel Object APIs */
 //extern CL_API_ENTRY cl_kernel CL_API_CALL
 //clCreateKernel(cl_program      /* program */,
@@ -690,7 +690,7 @@ namespace v8cl {
       if (size > valueSize) size = valueSize;
       value = *(void**) value;
     }
-    
+
     return clSetKernelArg(kernel, index, size, value);
   }
 
@@ -700,20 +700,20 @@ namespace v8cl {
 //                    cl_mem              /* buffer */,
 //                    cl_bool             /* blocking_read */,
 //                    size_t              /* offset */,
-//                    size_t              /* cb */, 
+//                    size_t              /* cb */,
 //                    void *              /* ptr */,
 //                    cl_uint             /* num_events_in_wait_list */,
 //                    const cl_event *    /* event_wait_list */,
 //                    cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_0;
   //extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueWriteBuffer(cl_command_queue   /* command_queue */, 
-//                     cl_mem             /* buffer */, 
-//                     cl_bool            /* blocking_write */, 
-//                     size_t             /* offset */, 
-//                     size_t             /* cb */, 
-//                     const void *       /* ptr */, 
-//                     cl_uint            /* num_events_in_wait_list */, 
-//                     const cl_event *   /* event_wait_list */, 
+//clEnqueueWriteBuffer(cl_command_queue   /* command_queue */,
+//                     cl_mem             /* buffer */,
+//                     cl_bool            /* blocking_write */,
+//                     size_t             /* offset */,
+//                     size_t             /* cb */,
+//                     const void *       /* ptr */,
+//                     cl_uint            /* num_events_in_wait_list */,
+//                     const cl_event *   /* event_wait_list */,
 //                     cl_event *         /* event */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t EnqueueReadOrWriteBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
@@ -755,7 +755,7 @@ namespace v8cl {
     uint32_t work_dim2 = *(uint32_t*) natives[5];
     uint32_t work_dim3 = *(uint32_t*) natives[7];
     void *event = 0;
-    
+
     if (work_dim1 == 0) {
       global_work_offset = NULL;
     }
@@ -781,7 +781,7 @@ namespace v8cl {
     if (data) {
       EventHandler* handler = (EventHandler*) data;
       if (handler->events.shake) {
-        handler->event = event;
+        //handler->event = event;
         handler->type = type;
         handler->events.shake(handler->impl_handle);
       }
@@ -794,16 +794,19 @@ namespace v8cl {
     if (handler->f->IsFunction()) {
       Persistent<Function> f = Persistent<Function>::Cast<Value>(handler->f);
       Handle<Value> args[3];
-      args[0] = External::Wrap(handler->event);
+      args[0] = handler->event;//External::Wrap(handler->event);
       args[1] = Int32::New(handler->type);
       args[2] = Local<Value>::New(handler->data);
       f->Call(f, 3, args);
       f.Dispose();
+      f.Clear();
     }
     handler->f.Dispose();
     handler->f.Clear();
     handler->data.Dispose();
     handler->data.Clear();
+    handler->event.Dispose();
+    handler->event.Clear();
     delete handler;
   }
 
@@ -811,16 +814,19 @@ namespace v8cl {
     int32_t (CALL *clSetEventCallback) (void*, int32_t, pfn_notify, void*);
     *(void**) &clSetEventCallback = wrapper->f;
 
-    void *event = *(void**) natives[0];
+    //void *event = *(void**) natives[0];
     // TODO: increase reference count?
-    int32_t type = *(int32_t*) natives[1];
 
     EventHandler *handler = new EventHandler; //(EventHandler*) malloc(sizeof(EventHandler));
     handler->events = wrapper->events;
+    handler->event = *(Persistent<Value>*) natives[0];
+    int32_t type = *(int32_t*) natives[1];
     handler->f = *(Persistent<Value>*) natives[2];
     handler->data = *(Persistent<Value>*) natives[3];
-    handler->event = 0;
-    handler->type = 0;
+    void *event = Get<void*>(handler->event);
+    cout << "EVENT_CALLBACK " << (uint64_t) event << endl;
+    //handler->event = 0;
+    //handler->type = 0;
 
     int32_t error = clSetEventCallback(event, type, InvokedByOpenCL, handler);
     if (error) {
@@ -829,63 +835,63 @@ namespace v8cl {
     }
 
     handler->impl_handle = handler->events.add(handler);
-    
+
     return 0;
   }
 
-//                            
+//
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clEnqueueReadBufferRect(cl_command_queue    /* command_queue */,
 //                        cl_mem              /* buffer */,
 //                        cl_bool             /* blocking_read */,
 //                        const size_t *      /* buffer_origin */,
-//                        const size_t *      /* host_origin */, 
+//                        const size_t *      /* host_origin */,
 //                        const size_t *      /* region */,
 //                        size_t              /* buffer_row_pitch */,
 //                        size_t              /* buffer_slice_pitch */,
 //                        size_t              /* host_row_pitch */,
-//                        size_t              /* host_slice_pitch */,                        
+//                        size_t              /* host_slice_pitch */,
 //                        void *              /* ptr */,
 //                        cl_uint             /* num_events_in_wait_list */,
 //                        const cl_event *    /* event_wait_list */,
 //                        cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_1;
-//                            
+//
 
-//                            
+//
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clEnqueueWriteBufferRect(cl_command_queue    /* command_queue */,
 //                         cl_mem              /* buffer */,
 //                         cl_bool             /* blocking_write */,
 //                         const size_t *      /* buffer_origin */,
-//                         const size_t *      /* host_origin */, 
+//                         const size_t *      /* host_origin */,
 //                         const size_t *      /* region */,
 //                         size_t              /* buffer_row_pitch */,
 //                         size_t              /* buffer_slice_pitch */,
 //                         size_t              /* host_row_pitch */,
-//                         size_t              /* host_slice_pitch */,                        
+//                         size_t              /* host_slice_pitch */,
 //                         const void *        /* ptr */,
 //                         cl_uint             /* num_events_in_wait_list */,
 //                         const cl_event *    /* event_wait_list */,
 //                         cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_1;
-//                            
+//
 //extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueCopyBuffer(cl_command_queue    /* command_queue */, 
+//clEnqueueCopyBuffer(cl_command_queue    /* command_queue */,
 //                    cl_mem              /* src_buffer */,
-//                    cl_mem              /* dst_buffer */, 
+//                    cl_mem              /* dst_buffer */,
 //                    size_t              /* src_offset */,
 //                    size_t              /* dst_offset */,
-//                    size_t              /* cb */, 
+//                    size_t              /* cb */,
 //                    cl_uint             /* num_events_in_wait_list */,
 //                    const cl_event *    /* event_wait_list */,
 //                    cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_0;
-//                            
+//
 //extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueCopyBufferRect(cl_command_queue    /* command_queue */, 
+//clEnqueueCopyBufferRect(cl_command_queue    /* command_queue */,
 //                        cl_mem              /* src_buffer */,
-//                        cl_mem              /* dst_buffer */, 
+//                        cl_mem              /* dst_buffer */,
 //                        const size_t *      /* src_origin */,
 //                        const size_t *      /* dst_origin */,
-//                        const size_t *      /* region */, 
+//                        const size_t *      /* region */,
 //                        size_t              /* src_row_pitch */,
 //                        size_t              /* src_slice_pitch */,
 //                        size_t              /* dst_row_pitch */,
@@ -893,15 +899,15 @@ namespace v8cl {
 //                        cl_uint             /* num_events_in_wait_list */,
 //                        const cl_event *    /* event_wait_list */,
 //                        cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_1;
-//                            
+//
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clEnqueueReadImage(cl_command_queue     /* command_queue */,
 //                   cl_mem               /* image */,
-//                   cl_bool              /* blocking_read */, 
+//                   cl_bool              /* blocking_read */,
 //                   const size_t *       /* origin[3] */,
 //                   const size_t *       /* region[3] */,
 //                   size_t               /* row_pitch */,
-//                   size_t               /* slice_pitch */, 
+//                   size_t               /* slice_pitch */,
 //                   void *               /* ptr */,
 //                   cl_uint              /* num_events_in_wait_list */,
 //                   const cl_event *     /* event_wait_list */,
@@ -910,11 +916,11 @@ namespace v8cl {
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clEnqueueWriteImage(cl_command_queue    /* command_queue */,
 //                    cl_mem              /* image */,
-//                    cl_bool             /* blocking_write */, 
+//                    cl_bool             /* blocking_write */,
 //                    const size_t *      /* origin[3] */,
 //                    const size_t *      /* region[3] */,
 //                    size_t              /* input_row_pitch */,
-//                    size_t              /* input_slice_pitch */, 
+//                    size_t              /* input_slice_pitch */,
 //                    const void *        /* ptr */,
 //                    cl_uint             /* num_events_in_wait_list */,
 //                    const cl_event *    /* event_wait_list */,
@@ -923,10 +929,10 @@ namespace v8cl {
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clEnqueueCopyImage(cl_command_queue     /* command_queue */,
 //                   cl_mem               /* src_image */,
-//                   cl_mem               /* dst_image */, 
+//                   cl_mem               /* dst_image */,
 //                   const size_t *       /* src_origin[3] */,
 //                   const size_t *       /* dst_origin[3] */,
-//                   const size_t *       /* region[3] */, 
+//                   const size_t *       /* region[3] */,
 //                   cl_uint              /* num_events_in_wait_list */,
 //                   const cl_event *     /* event_wait_list */,
 //                   cl_event *           /* event */) CL_API_SUFFIX__VERSION_1_0;
@@ -934,9 +940,9 @@ namespace v8cl {
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clEnqueueCopyImageToBuffer(cl_command_queue /* command_queue */,
 //                           cl_mem           /* src_image */,
-//                           cl_mem           /* dst_buffer */, 
+//                           cl_mem           /* dst_buffer */,
 //                           const size_t *   /* src_origin[3] */,
-//                           const size_t *   /* region[3] */, 
+//                           const size_t *   /* region[3] */,
 //                           size_t           /* dst_offset */,
 //                           cl_uint          /* num_events_in_wait_list */,
 //                           const cl_event * /* event_wait_list */,
@@ -945,10 +951,10 @@ namespace v8cl {
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clEnqueueCopyBufferToImage(cl_command_queue /* command_queue */,
 //                           cl_mem           /* src_buffer */,
-//                           cl_mem           /* dst_image */, 
+//                           cl_mem           /* dst_image */,
 //                           size_t           /* src_offset */,
 //                           const size_t *   /* dst_origin[3] */,
-//                           const size_t *   /* region[3] */, 
+//                           const size_t *   /* region[3] */,
 //                           cl_uint          /* num_events_in_wait_list */,
 //                           const cl_event * /* event_wait_list */,
 //                           cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;
@@ -956,7 +962,7 @@ namespace v8cl {
 //extern CL_API_ENTRY void * CL_API_CALL
 //clEnqueueMapBuffer(cl_command_queue /* command_queue */,
 //                   cl_mem           /* buffer */,
-//                   cl_bool          /* blocking_map */, 
+//                   cl_bool          /* blocking_map */,
 //                   cl_map_flags     /* map_flags */,
 //                   size_t           /* offset */,
 //                   size_t           /* cb */,
@@ -967,9 +973,9 @@ namespace v8cl {
 
 //extern CL_API_ENTRY void * CL_API_CALL
 //clEnqueueMapImage(cl_command_queue  /* command_queue */,
-//                  cl_mem            /* image */, 
-//                  cl_bool           /* blocking_map */, 
-//                  cl_map_flags      /* map_flags */, 
+//                  cl_mem            /* image */,
+//                  cl_bool           /* blocking_map */,
+//                  cl_map_flags      /* map_flags */,
 //                  const size_t *    /* origin[3] */,
 //                  const size_t *    /* region[3] */,
 //                  size_t *          /* image_row_pitch */,
@@ -996,9 +1002,9 @@ namespace v8cl {
 
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clEnqueueNativeKernel(cl_command_queue  /* command_queue */,
-//					  void (*user_func)(void *), 
+//            void (*user_func)(void *),
 //                      void *            /* args */,
-//                      size_t            /* cb_args */, 
+//                      size_t            /* cb_args */,
 //                      cl_uint           /* num_mem_objects */,
 //                      const cl_mem *    /* mem_list */,
 //                      const void **     /* args_mem_loc */,
@@ -1022,16 +1028,16 @@ namespace v8cl {
 // *
 // * Returns the extension function address for the given function name,
 // * or NULL if a valid function can not be found.  The client must
-// * check to make sure the address is not NULL, before using or 
+// * check to make sure the address is not NULL, before using or
 // * calling the returned function address.
 // */
 //extern CL_API_ENTRY void * CL_API_CALL clGetExtensionFunctionAddress(const char * /* func_name */) CL_API_SUFFIX__VERSION_1_0;
 
 
 //extern CL_API_ENTRY cl_int CL_API_CALL
-//clSetMemObjectDestructorCallback(  cl_mem /* memobj */, 
-//                                    void (CL_CALLBACK * /*pfn_notify*/)( cl_mem /* memobj */, void* /*user_data*/), 
-//                                    void * /*user_data */ )             CL_API_SUFFIX__VERSION_1_1;  
+//clSetMemObjectDestructorCallback(  cl_mem /* memobj */,
+//                                    void (CL_CALLBACK * /*pfn_notify*/)( cl_mem /* memobj */, void* /*user_data*/),
+//                                    void * /*user_data */ )             CL_API_SUFFIX__VERSION_1_1;
 
     //extern CL_API_ENTRY cl_program CL_API_CALL
 //clCreateProgramWithBinary(cl_context                     /* context */,
@@ -1053,11 +1059,11 @@ namespace v8cl {
 //clWaitForEvents(cl_uint             /* num_events */,
 //                const cl_event *    /* event_list */) CL_API_SUFFIX__VERSION_1_0;
 
-//                            
+//
 //extern CL_API_ENTRY cl_event CL_API_CALL
 //clCreateUserEvent(cl_context    /* context */,
-//                  cl_int *      /* errcode_ret */) CL_API_SUFFIX__VERSION_1_1;               
-//                            
+//                  cl_int *      /* errcode_ret */) CL_API_SUFFIX__VERSION_1_1;
+//
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clRetainEvent(cl_event /* event */) CL_API_SUFFIX__VERSION_1_0;
 
@@ -1067,7 +1073,7 @@ namespace v8cl {
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clSetUserEventStatus(cl_event   /* event */,
 //                     cl_int     /* execution_status */) CL_API_SUFFIX__VERSION_1_1;
-//                     
+//
 //extern CL_API_ENTRY cl_int CL_API_CALL
 //clSetEventCallback( cl_event    /* event */,
 //                    cl_int      /* command_exec_callback_type */,
