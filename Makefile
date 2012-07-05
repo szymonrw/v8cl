@@ -27,7 +27,7 @@ node_tests: $(TESTS_OUTPUTS)
 #$(TESTS_OUTPUTS) : $(NODE_TARGET)
 
 build/%.txt : tests/%.js #src/%.cpp
-	@echo #node $<
+	@#echo #node $<
 #| tee $@
 
 build/%.o : src/%.cpp

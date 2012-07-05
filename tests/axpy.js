@@ -87,13 +87,13 @@ var f = function() {
 };
 
 
-setTimeout(function() {
-   console.log("bye");
+// setTimeout(function() {
+//    console.log("bye");
 
-  for (var i = 0; i < 10; ++i) {
-    gc();
-  }
-}, 15000);
+//   for (var i = 0; i < 10; ++i) {
+//     gc();
+//   }
+// }, 300);
 
 
 f();

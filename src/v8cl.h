@@ -15,6 +15,8 @@
 #define CALL
 #endif
 
+#define V8CL_MAX_CONVERTERS 10
+
 namespace v8cl {
   using namespace v8;
   using namespace std;
@@ -29,25 +31,31 @@ namespace v8cl {
   /**
     Event Support consists of two functions.
 
-    `add` sets up event to be invoked later and associates it with given EventHandler. Returns native implementation-specific pointer. This pointer is given to `shake` function when event occurs.
+    `add` sets up event to be invoked later and associates it with
+    given EventHandler. Returns native implementation-specific
+    pointer. This pointer is given to `shake` function when event
+    occurs.
 
-    `shake` needs to queue the event in event loop. It's responsibility is to cause invokation of InvokeBackInEventLoop(EventHandler*) _inside_ the event loop and clean up any implementation specific state (at any time after the event).
+    `shake` needs to queue the event in event loop. It's
+    responsibility is to cause invokation of
+    InvokeBackInEventLoop(EventHandler*) _inside_ the event loop and
+    clean up any implementation specific state (at any time after the
+    event).
 
-    `shake` is possibly invoked in auxiliary thread so it needs to be thread-safe.
+    `shake` is possibly invoked in auxiliary thread so it needs to be
+    thread-safe.
   */
   struct EventSupport {
     void* (*add) (EventHandler* handler);
     void (*shake) (void* their_handle);
   };
 
-  void InvokeBackInEventLoop (EventHandler* handler);
-
   struct EventHandler {
     EventSupport events;
     Persistent<Value> f;
     Persistent<Value> data;
     Persistent<Value> event;
-    //void* event;
+
     int32_t type;
     void* impl_handle;
   };
@@ -55,7 +63,7 @@ namespace v8cl {
   struct Wrapper {
     const char *name;
     Action action;
-    Converter converters[20];
+    Converter converters[V8CL_MAX_CONVERTERS];
     Returner returner;
     const char *releaseFunctionName;
     int minArgc;
@@ -64,6 +72,9 @@ namespace v8cl {
     void *releaseFunction;
     EventSupport events;
   };
+
+  Handle<Value> InvokeWrapper (const Arguments& args);
+  void InvokeBackInEventLoop (EventHandler* handler);
 
   // Functions
   int32_t OneArgFn (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
@@ -140,9 +151,11 @@ namespace v8cl {
     result.push_back(ptr);
   }
 
-
   template<typename T>
   T Get (Handle<Value> value);
+
+  // Global state
+  extern Wrapper wrappers[];
 
   // tmp
   void PrintBinaryData(void* data, size_t size);
