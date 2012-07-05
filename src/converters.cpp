@@ -55,11 +55,11 @@ namespace v8cl {
   //     PushBackWrapped(natives, 0);
   //     return;
   //   }
-    
+
   //   Handle<Array> array = Handle<Array>::Cast<Value>(value);
   //   const size_t size = array->Length();
   //   void **nativeArray = (void**) malloc(sizeof(void*) * size);
-    
+
   //   for (size_t i = 0; i < size; ++i) {
   //     nativeArray[i] = External::Unwrap(array->Get(i));
   //   }
@@ -76,11 +76,11 @@ namespace v8cl {
       PushBackWrapped<size_t>(natives, 0);
       return;
     }
-    
+
     Handle<Array> array = Handle<Array>::Cast<Value>(value);
     const size_t size = array->Length();
     T *nativeArray = (T*) malloc(sizeof(T) * size);
-    
+
     for (size_t i = 0; i < size; ++i) {
       nativeArray[i] = Get<T>(array->Get(i));
     }
@@ -88,7 +88,7 @@ namespace v8cl {
     natives.push_back(nativeArray);
     PushBackWrapped(natives, size);
   }
-  
+
 
   // Forces generation of templates for types used.
   void _force_templates () {
@@ -149,7 +149,7 @@ namespace v8cl {
   void TypedArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     void *buff = NULL;
     size_t byteLength = 0;
-    
+
     if (value->IsObject()) {
       Handle<Object> obj = value->ToObject();
       if (obj->HasIndexedPropertiesInExternalArrayData()) {
@@ -174,16 +174,16 @@ namespace v8cl {
           byteLength *= 8;
           break;
         }
-        cout << "buff " << (uintptr_t) buff << " len " << byteLength << endl;
+        // cout << "buff " << (uintptr_t) buff << " len " << byteLength << endl;
       } else {
         buff = Get<void*>(value);
       }
     }
-    
+
     PushBackWrapped(natives, buff);
     PushBackWrapped(natives, byteLength);
   }
-  
+
   void Persist (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
     Persistent<Value> *persisted = (Persistent<Value>*) malloc(sizeof(Persistent<Value>));
     *persisted = Persistent<Value>::New(value);

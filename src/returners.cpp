@@ -6,7 +6,7 @@ namespace v8cl {
 
   // Decrease reference count
   void DisposeOpenCLObject (Persistent<Value> value, void* f) {
-    cout << "Dispose CL " << (uintptr_t) f ;
+    // cout << "Dispose CL " << (uintptr_t) f ;
     bool dispose = true;
     if (f && value->IsObject()) {
       Local<Object> object = value->ToObject();
@@ -14,27 +14,16 @@ namespace v8cl {
         int32_t (CALL *release) (void* smth);
         *(void**) &release = f;
         void *ptr = object->GetPointerFromInternalField(0);
-        cout << " " << (uintptr_t) ptr;
+        // cout << " " << (uintptr_t) ptr;
         int32_t error = 0;
-
-        // if (clGetEventInfo) {
-        //   int32_t eventStatus = -1;
-        //   error = clGetEventInfo(ptr, CL_EVENT_REFERENCE_COUNT, sizeof(int32_t), &eventStatus, NULL);
-        //   if (!error) {
-        //     cout << " EVENT " << eventStatus;
-        //     if (eventStatus > 0) {
-        //       dispose = false;
-        //     }
-        //   }
-        // }
 
         if (dispose) {
           error = release(ptr);
-          if (!error) {
-            cout << " SUCCESS";
-          } else {
-            cout << " ERROR " << error;
-          }
+          // if (!error) {
+          //   cout << " SUCCESS";
+          // } else {
+          //   cout << " ERROR " << error;
+          // }
         }
       }
     }
@@ -44,7 +33,7 @@ namespace v8cl {
     } else {
       value.MakeWeak(f, DisposeOpenCLObject);
     }
-    cout << endl;
+    // cout << endl;
   }
 
   Handle<Value> WrapPointer (Persistent<ObjectTemplate> tpl, void* ptr, void* retainer = NULL) {
@@ -78,7 +67,7 @@ namespace v8cl {
     // Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
     // p.MakeWeak(NULL, IamWeak);
 
-    cout << wrapper->name << ' ';
+    // cout << wrapper->name << ' ';
     return WrapPointer(wrapper->objectTemplate, *(void**) result[0], wrapper->releaseFunction);
   }
 

@@ -270,7 +270,7 @@ namespace v8cl {
       return error;
     }
 
-    cout << "MEM " << (uintptr_t) mem << endl;
+    //cout << "MEM " << (uintptr_t) mem << endl;
 
     PushBackWrapped(result, mem);
     return 0;
@@ -500,7 +500,8 @@ namespace v8cl {
         handler->events.shake(handler->impl_handle);
       }
     } else {
-      cout << "bad" << endl;
+      // TODO: what here?
+      //cout << "bad" << endl;
     }
   }
 
@@ -535,7 +536,7 @@ namespace v8cl {
     handler->f = *(Persistent<Value>*) natives[2];
     handler->data = *(Persistent<Value>*) natives[3];
     void *event = Get<void*>(handler->event);
-    cout << "EVENT_CALLBACK " << (uint64_t) event << endl;
+    // cout << "EVENT_CALLBACK " << (uint64_t) event << endl;
 
     int32_t error = clSetEventCallback(event, type, InvokedByOpenCL, handler);
     if (error) {
