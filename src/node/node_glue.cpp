@@ -22,7 +22,6 @@ static void InvokeHandler (uv_async_t* handle, int status) {
 static void* RegisterHandler (EventHandler* handler) {
   uv_async_t *uv_handle = (uv_async_t*) malloc(sizeof(uv_async_t));
   uv_async_init(uv_default_loop(), uv_handle, InvokeHandler);
-  cout << "UV_HANDLE_TYPE " << uv_handle->type << endl;
   uv_handle->data = handler;
   return uv_handle;
 }

@@ -2,51 +2,8 @@
 #include "constants.h"
 
 namespace v8cl {
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clRetainContext(cl_context /* context */) CL_API_SUFFIX__VERSION_1_0;
 
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clReleaseContext(cl_context /* context */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clRetainCommandQueue(cl_command_queue /* command_queue */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clReleaseCommandQueue(cl_command_queue /* command_queue */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clRetainMemObject(cl_mem /* memobj */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clReleaseMemObject(cl_mem /* memobj */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clRetainSampler(cl_sampler /* sampler */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clReleaseSampler(cl_sampler /* sampler */) CL_API_SUFFIX__VERSION_1_0;
-
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clRetainProgram(cl_program /* program */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clReleaseProgram(cl_program /* program */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clRetainKernel(cl_kernel    /* kernel */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clReleaseKernel(cl_kernel   /* kernel */) CL_API_SUFFIX__VERSION_1_0;
-
-//
-///* Flush and Finish APIs */
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clFlush(cl_command_queue /* command_queue */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clFinish(cl_command_queue /* command_queue */) CL_API_SUFFIX__VERSION_1_0;
-
+  // clFlush
   int32_t OneArgFn (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clFn) (void* smth);
     *(void**) &clFn = wrapper->f;
@@ -56,81 +13,10 @@ namespace v8cl {
     return clFn(smth);
   }
 
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetPlatformInfo(cl_platform_id   /* platform */,
-//                  cl_platform_info /* param_name */,
-//                  size_t           /* param_value_size */,
-//                  void *           /* param_value */,
-//                  size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetDeviceInfo(cl_device_id    /* device */,
-//                cl_device_info  /* param_name */,
-//                size_t          /* param_value_size */,
-//                void *          /* param_value */,
-//                size_t *        /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-    //extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetContextInfo(cl_context         /* context */,
-//                 cl_context_info    /* param_name */,
-//                 size_t             /* param_value_size */,
-//                 void *             /* param_value */,
-//                 size_t *           /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetCommandQueueInfo(cl_command_queue      /* command_queue */,
-//                      cl_command_queue_info /* param_name */,
-//                      size_t                /* param_value_size */,
-//                      void *                /* param_value */,
-//                      size_t *              /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-//
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetMemObjectInfo(cl_mem           /* memobj */,
-//                   cl_mem_info      /* param_name */,
-//                   size_t           /* param_value_size */,
-//                   void *           /* param_value */,
-//                   size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetImageInfo(cl_mem           /* image */,
-//               cl_image_info    /* param_name */,
-//               size_t           /* param_value_size */,
-//               void *           /* param_value */,
-//               size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetSamplerInfo(cl_sampler         /* sampler */,
-//                 cl_sampler_info    /* param_name */,
-//                 size_t             /* param_value_size */,
-//                 void *             /* param_value */,
-//                 size_t *           /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-//
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetProgramInfo(cl_program         /* program */,
-//                 cl_program_info    /* param_name */,
-//                 size_t             /* param_value_size */,
-//                 void *             /* param_value */,
-//                 size_t *           /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetKernelInfo(cl_kernel       /* kernel */,
-//                cl_kernel_info  /* param_name */,
-//                size_t          /* param_value_size */,
-//                void *          /* param_value */,
-//                size_t *        /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetEventInfo(cl_event         /* event */,
-//               cl_event_info    /* param_name */,
-//               size_t           /* param_value_size */,
-//               void *           /* param_value */,
-//               size_t *         /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t GetProgramBinaries (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
 
+  // All clGet*Info
   int32_t GetInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     uint32_t param_name = *(uint32_t*) natives[1];
     if (param_name == CL_PROGRAM_BINARIES) {
@@ -201,24 +87,7 @@ namespace v8cl {
     return 0;
   }
 
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetProgramBuildInfo(cl_program            /* program */,
-//                      cl_device_id          /* device */,
-//                      cl_program_build_info /* param_name */,
-//                      size_t                /* param_value_size */,
-//                      void *                /* param_value */,
-//                      size_t *              /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-//
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetKernelWorkGroupInfo(cl_kernel                  /* kernel */,
-//                         cl_device_id               /* device */,
-//                         cl_kernel_work_group_info  /* param_name */,
-//                         size_t                     /* param_value_size */,
-//                         void *                     /* param_value */,
-//                         size_t *                   /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
+  // clGetProgramBuildInfo, clGetKernelWorkGroupInfo
   int32_t GetDependentInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clGetDependentInfo) (void*, void*, uint32_t, size_t, void*, size_t*);
     *(void**) &clGetDependentInfo = wrapper->f;
@@ -242,17 +111,6 @@ namespace v8cl {
     PushBackWrapped(result, size);
     return 0;
   }
-
-
-
-  //extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetSupportedImageFormats(cl_context           /* context */,
-//                           cl_mem_flags         /* flags */,
-//                           cl_mem_object_type   /* image_type */,
-//                           cl_uint              /* num_entries */,
-//                           cl_image_format *    /* image_formats */,
-//                           cl_uint *            /* num_image_formats */) CL_API_SUFFIX__VERSION_1_0;
-
 
   int32_t GetSupportedImageFormats (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clGetSupportedImageFormats) (void*, uint64_t, uint32_t, uint32_t, cl_image_format*, uint32_t*);
@@ -278,11 +136,6 @@ namespace v8cl {
     return 0;
   }
 
-  //extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetPlatformIDs(cl_uint          /* num_entries */,
-//                 cl_platform_id * /* platforms */,
-//                 cl_uint *        /* num_platforms */) CL_API_SUFFIX__VERSION_1_0;
-
   int32_t GetPlatformIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clGetPlatformIDs) (size_t, void*, size_t*);
     *(void**) &clGetPlatformIDs = wrapper->f;
@@ -306,13 +159,6 @@ namespace v8cl {
     // result.push_back(sizePtr);
     return 0;
   }
-
-  //extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetDeviceIDs(cl_platform_id   /* platform */,
-//               cl_device_type   /* device_type */,
-//               cl_uint          /* num_entries */,
-//               cl_device_id *   /* devices */,
-//               cl_uint *        /* num_devices */) CL_API_SUFFIX__VERSION_1_0;
 
   int32_t GetDeviceIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clGetDeviceIDs) (void*, uint64_t, size_t, void*, size_t*);
@@ -342,14 +188,6 @@ namespace v8cl {
     return 0;
   }
 
-  //extern CL_API_ENTRY cl_context CL_API_CALL
-//clCreateContext(const cl_context_properties * /* properties */,
-//                cl_uint                       /* num_devices */,
-//                const cl_device_id *          /* devices */,
-//                void (CL_CALLBACK * /* pfn_notify */)(const char *, const void *, size_t, void *),
-//                void *                        /* user_data */,
-//                cl_int *                      /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
-
   int32_t CreateContext (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateContext) (intptr_t*, uint32_t, void*, void*, void*, int32_t*);
     *(void**) &clCreateContext = wrapper->f;
@@ -374,13 +212,6 @@ namespace v8cl {
     return 0;
   }
 
-//extern CL_API_ENTRY cl_context CL_API_CALL
-//clCreateContextFromType(const cl_context_properties * /* properties */,
-//                        cl_device_type                /* device_type */,
-//                        void (CL_CALLBACK *     /* pfn_notify*/ )(const char *, const void *, size_t, void *),
-//                        void *                        /* user_data */,
-//                        cl_int *                      /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
-
   int32_t CreateContextFromType (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateContextFromType) (intptr_t*, uint64_t, void*, void*, int32_t*);
     *(void**) &clCreateContextFromType = wrapper->f;
@@ -403,13 +234,6 @@ namespace v8cl {
     return 0;
   }
 
-///* Command Queue APIs */
-//extern CL_API_ENTRY cl_command_queue CL_API_CALL
-//clCreateCommandQueue(cl_context                     /* context */,
-//                     cl_device_id                   /* device */,
-//                     cl_command_queue_properties    /* properties */,
-//                     cl_int *                       /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
-
   int32_t CreateCommandQueue (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateCommandQueue) (void*, void*, uint64_t, int32_t*);
     *(void**) &clCreateCommandQueue = wrapper->f;
@@ -431,14 +255,6 @@ namespace v8cl {
     return 0;
   }
 
-
-///* Memory Object APIs */
-//extern CL_API_ENTRY cl_mem CL_API_CALL
-//clCreateBuffer(cl_context   /* context */,
-//               cl_mem_flags /* flags */,
-//               size_t       /* size */,
-//               void *       /* host_ptr */,
-//               cl_int *     /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateBuffer) (void*, uint64_t, size_t, void*, int32_t*);
     *(void**) &clCreateBuffer = wrapper->f;
@@ -460,12 +276,6 @@ namespace v8cl {
     return 0;
   }
 
-//extern CL_API_ENTRY cl_mem CL_API_CALL
-//clCreateSubBuffer(cl_mem                   /* buffer */,
-//                  cl_mem_flags             /* flags */,
-//                  cl_buffer_create_type    /* buffer_create_type */,
-//                  const void *             /* buffer_create_info */,
-//                  cl_int *                 /* errcode_ret */) CL_API_SUFFIX__VERSION_1_1;
   int32_t CreateSubBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateSubBuffer) (void*, uint64_t, uint32_t, void*, int32_t*);
     *(void**) &clCreateSubBuffer = wrapper->f;
@@ -486,15 +296,6 @@ namespace v8cl {
   }
 
 
-//extern CL_API_ENTRY cl_mem CL_API_CALL
-//clCreateImage2D(cl_context              /* context */,
-//                cl_mem_flags            /* flags */,
-//                const cl_image_format * /* image_format */,
-//                size_t                  /* image_width */,
-//                size_t                  /* image_height */,
-//                size_t                  /* image_row_pitch */,
-//                void *                  /* host_ptr */,
-//                cl_int *                /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateImage2D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateImage2D) (void*, uint64_t, cl_image_format*, size_t, size_t, size_t, void*, int32_t*);
     *(void**) &clCreateImage2D = wrapper->f;
@@ -517,18 +318,6 @@ namespace v8cl {
     return 0;
   }
 
-//
-//extern CL_API_ENTRY cl_mem CL_API_CALL
-//clCreateImage3D(cl_context              /* context */,
-//                cl_mem_flags            /* flags */,
-//                const cl_image_format * /* image_format */,
-//                size_t                  /* image_width */,
-//                size_t                  /* image_height */,
-//                size_t                  /* image_depth */,
-//                size_t                  /* image_row_pitch */,
-//                size_t                  /* image_slice_pitch */,
-//                void *                  /* host_ptr */,
-//                cl_int *                /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateImage3D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateImage3D) (void*, uint64_t, cl_image_format*, size_t, size_t, size_t, size_t, size_t, void*, int32_t*);
     *(void**) &clCreateImage3D = wrapper->f;
@@ -553,14 +342,6 @@ namespace v8cl {
     return 0;
   }
 
-
-///* Sampler APIs  */
-//extern CL_API_ENTRY cl_sampler CL_API_CALL
-//clCreateSampler(cl_context          /* context */,
-//                cl_bool             /* normalized_coords */,
-//                cl_addressing_mode  /* addressing_mode */,
-//                cl_filter_mode      /* filter_mode */,
-//                cl_int *            /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateSampler (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateSampler) (void*, uint32_t, uint32_t, uint32_t, int32_t*);
     *(void**) &clCreateSampler = wrapper->f;
@@ -578,13 +359,6 @@ namespace v8cl {
     return 0;
   }
 
-///* Program Object APIs  */
-//extern CL_API_ENTRY cl_program CL_API_CALL
-//clCreateProgramWithSource(cl_context        /* context */,
-//                          cl_uint           /* count */,
-//                          const char **     /* strings */,
-//                          const size_t *    /* lengths */,
-//                          cl_int *          /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateProgramWithSource (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateProgramWithSource) (void*, uint32_t, char**, size_t*, int32_t*);
     *(void**) &clCreateProgramWithSource = wrapper->f;
@@ -601,14 +375,6 @@ namespace v8cl {
     return 0;
   }
 
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clBuildProgram(cl_program           /* program */,
-//               cl_uint              /* num_devices */,
-//               const cl_device_id * /* device_list */,
-//               const char *         /* options */,
-//               void (CL_CALLBACK *  /* pfn_notify */)(cl_program /* program */, void * /* user_data */),
-//               void *               /* user_data */) CL_API_SUFFIX__VERSION_1_0;
   int32_t BuildProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clBuildProgram) (void*, uint32_t, void*, char*, void*, void*);
     *(void**) &clBuildProgram = wrapper->f;
@@ -623,12 +389,6 @@ namespace v8cl {
     return error;
   }
 
-
-///* Kernel Object APIs */
-//extern CL_API_ENTRY cl_kernel CL_API_CALL
-//clCreateKernel(cl_program      /* program */,
-//               const char *    /* kernel_name */,
-//               cl_int *        /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     void* (CALL *clCreateKernel) (void*, char*, int32_t*);
     *(void**) &clCreateKernel = wrapper->f;
@@ -644,11 +404,6 @@ namespace v8cl {
     return 0;
   }
 
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clCreateKernelsInProgram(cl_program     /* program */,
-//                         cl_uint        /* num_kernels */,
-//                         cl_kernel *    /* kernels */,
-//                         cl_uint *      /* num_kernels_ret */) CL_API_SUFFIX__VERSION_1_0;
   int32_t CreateKernelsInProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clCreateKernelsInProgram) (void*, uint32_t, void*, uint32_t*);
     *(void**) &clCreateKernelsInProgram = wrapper->f;
@@ -671,12 +426,6 @@ namespace v8cl {
     return 0;
   }
 
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clSetKernelArg(cl_kernel    /* kernel */,
-//               cl_uint      /* arg_index */,
-//               size_t       /* arg_size */,
-//               const void * /* arg_value */) CL_API_SUFFIX__VERSION_1_0;
   int32_t SetKernelArg (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clSetKernelArg) (void*, uint32_t, size_t, void*);
     *(void**) &clSetKernelArg = wrapper->f;
@@ -694,28 +443,7 @@ namespace v8cl {
     return clSetKernelArg(kernel, index, size, value);
   }
 
-///* Enqueued Commands APIs */
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueReadBuffer(cl_command_queue    /* command_queue */,
-//                    cl_mem              /* buffer */,
-//                    cl_bool             /* blocking_read */,
-//                    size_t              /* offset */,
-//                    size_t              /* cb */,
-//                    void *              /* ptr */,
-//                    cl_uint             /* num_events_in_wait_list */,
-//                    const cl_event *    /* event_wait_list */,
-//                    cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_0;
-  //extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueWriteBuffer(cl_command_queue   /* command_queue */,
-//                     cl_mem             /* buffer */,
-//                     cl_bool            /* blocking_write */,
-//                     size_t             /* offset */,
-//                     size_t             /* cb */,
-//                     const void *       /* ptr */,
-//                     cl_uint            /* num_events_in_wait_list */,
-//                     const cl_event *   /* event_wait_list */,
-//                     cl_event *         /* event */) CL_API_SUFFIX__VERSION_1_0;
-
+  // clEnqueueReadBuffer, clEnqueueWriteBuffer
   int32_t EnqueueReadOrWriteBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clEnqueueReadOrWriteBuffer) (void*, void*, uint32_t, size_t, size_t, void*, uint32_t, void*, void*);
     *(void**) &clEnqueueReadOrWriteBuffer = wrapper->f;
@@ -732,16 +460,6 @@ namespace v8cl {
     return error;
   }
 
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueNDRangeKernel(cl_command_queue /* command_queue */,
-//                       cl_kernel        /* kernel */,
-//                       cl_uint          /* work_dim */,
-//                       const size_t *   /* global_work_offset */,
-//                       const size_t *   /* global_work_size */,
-//                       const size_t *   /* local_work_size */,
-//                       cl_uint          /* num_events_in_wait_list */,
-//                       const cl_event * /* event_wait_list */,
-//                       cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;
   int32_t EnqueueNDRangeKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
     int32_t (CALL *clEnqueueNDRangeKernel) (void*, void*, uint32_t, size_t*, size_t*, size_t*, uint32_t, void*, void*);
     *(void**) &clEnqueueNDRangeKernel = wrapper->f;
@@ -771,12 +489,8 @@ namespace v8cl {
     }
   }
 
-  //extern CL_API_ENTRY cl_int CL_API_CALL
-//clSetEventCallback( cl_event    /* event */,
-//                    cl_int      /* command_exec_callback_type */,
-//                    void (CL_CALLBACK * /* pfn_notify */)(cl_event, cl_int, void *),
-//                    void *      /* user_data */) CL_API_SUFFIX__VERSION_1_1;
 
+  // Callback stuff
   void InvokedByOpenCL (void* event, int32_t type, void* data) {
     if (data) {
       EventHandler* handler = (EventHandler*) data;
@@ -814,9 +528,6 @@ namespace v8cl {
     int32_t (CALL *clSetEventCallback) (void*, int32_t, pfn_notify, void*);
     *(void**) &clSetEventCallback = wrapper->f;
 
-    //void *event = *(void**) natives[0];
-    // TODO: increase reference count?
-
     EventHandler *handler = new EventHandler; //(EventHandler*) malloc(sizeof(EventHandler));
     handler->events = wrapper->events;
     handler->event = *(Persistent<Value>*) natives[0];
@@ -825,8 +536,6 @@ namespace v8cl {
     handler->data = *(Persistent<Value>*) natives[3];
     void *event = Get<void*>(handler->event);
     cout << "EVENT_CALLBACK " << (uint64_t) event << endl;
-    //handler->event = 0;
-    //handler->type = 0;
 
     int32_t error = clSetEventCallback(event, type, InvokedByOpenCL, handler);
     if (error) {
