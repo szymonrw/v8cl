@@ -105,11 +105,6 @@ namespace v8cl {
     uint32_t errorIdx = 0;
     char firstLetter[2] = " ";
 
-    /// testing
-    Handle<FunctionTemplate> gctpl = FunctionTemplate::New(TestGC);
-    target->Set(String::New("testgc"), gctpl->GetFunction());
-    /// end testing
-
     Persistent<ObjectTemplate> objectTemplate = Persistent<ObjectTemplate>::New(ObjectTemplate::New());
     objectTemplate->SetInternalFieldCount(1);
 
