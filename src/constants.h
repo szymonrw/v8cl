@@ -1,6 +1,8 @@
 #ifndef V8CL_CONSTANTS
 #define V8CL_CONSTANTS
 
+#include "v8cl.h"
+
 /* Error Codes */
 #define CL_SUCCESS                                  0
 #define CL_DEVICE_NOT_FOUND                         -1
@@ -337,7 +339,7 @@
 #define CL_RUNNING                                  0x1
 #define CL_SUBMITTED                                0x2
 #define CL_QUEUED                                   0x3
-  
+
 /* cl_buffer_create_type  */
 #define CL_BUFFER_CREATE_TYPE_REGION                0x1220
 
@@ -349,7 +351,6 @@
 
 
 namespace v8cl {
-  struct StrToInt { const char *name; int value; };
 
   const StrToInt ERROR_CODES[] = {
     { "SUCCESS",                                     0 },
@@ -401,13 +402,14 @@ namespace v8cl {
     { "INVALID_BUFFER_SIZE",                       -61 },
     { "INVALID_MIP_LEVEL",                         -62 },
     { "INVALID_GLOBAL_WORK_SIZE",                  -63 },
-    { "INVALID_PROPERTY",                          -64 }
+    { "INVALID_PROPERTY",                          -64 },
+    { NULL }
   };
   const StrToInt CONSTANTS[] = {
-    /* OpenCL Version */ 
+    /* OpenCL Version */
     { "VERSION_1_0",                              1 },
     { "VERSION_1_1",                              1 },
-    /* cl_bool */ 
+    /* cl_bool */
     { "FALSE",                                    0 },
     { "TRUE",                                     1 },
     /* cl_platform_info */
@@ -664,6 +666,7 @@ namespace v8cl {
     { "PROFILING_COMMAND_SUBMIT",                 0x1281 },
     { "PROFILING_COMMAND_START",                  0x1282 },
     { "PROFILING_COMMAND_END",                    0x1283 },
+    { NULL }
   };
 }
 

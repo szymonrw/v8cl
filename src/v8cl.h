@@ -123,7 +123,8 @@ namespace v8cl {
   Handle<Value> ReturnInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
 
   // Constants
-  void SetConstants(Handle<Object> target);
+  struct StrToInt { const char *name; int value; };
+  void SetConstants(Handle<Object> target, const StrToInt* list);
   map<int, const char*> GetErrorCodes();
 
   // Put whole WebCL api on target obejct using this function
