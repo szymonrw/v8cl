@@ -1,4 +1,7 @@
 #include "v8cl.h"
+#include "functions.h"
+#include "converters.h"
+#include "returners.h"
 
 namespace v8cl {
   Wrapper wrappers[] = {

@@ -76,52 +76,6 @@ namespace v8cl {
   Handle<Value> InvokeWrapper (const Arguments& args);
   void InvokeBackInEventLoop (EventHandler* handler);
 
-  // Functions
-  int32_t OneArgFn (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t GetInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t GetDependentInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t GetPlatformIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t GetDeviceIDs (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateContext (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateContextFromType (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateCommandQueue (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateSubBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateImage2D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateImage3D (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t GetSupportedImageFormats (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateSampler (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateProgramWithSource (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t BuildProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t CreateKernelsInProgram (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t SetKernelArg (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t EnqueueReadOrWriteBuffer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t EnqueueNDRangeKernel (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  int32_t SetEventCallback (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-
-  // Converters
-  template<typename T>
-  void One (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-  template<typename T>
-  void Many (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-
-  void NullTerminatedList (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-  void BufferRegion (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-  void ImageFormat (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-  void CharArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-  void TypedArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-  void TypedArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-  void Persist (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives);
-
-  // Exposed Returners
-  Handle<Value> ReturnPointerArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnImageFormatArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnNullTerminatedListAsIntegerArray (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnPointer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnString (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-  Handle<Value> ReturnInfo (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result);
-
   // Constants
   struct StrToInt { const char *name; int value; };
   void SetConstants(Handle<Object> target, const StrToInt* list);

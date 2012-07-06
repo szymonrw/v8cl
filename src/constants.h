@@ -405,6 +405,7 @@ namespace v8cl {
     { "INVALID_PROPERTY",                          -64 },
     { NULL }
   };
+
   const StrToInt CONSTANTS[] = {
     /* OpenCL Version */
     { "VERSION_1_0",                              1 },
@@ -423,7 +424,7 @@ namespace v8cl {
     { "DEVICE_TYPE_CPU",                          (1 << 1) },
     { "DEVICE_TYPE_GPU",                          (1 << 2) },
     { "DEVICE_TYPE_ACCELERATOR",                  (1 << 3) },
-    { "DEVICE_TYPE_ALL",                          0xFFFFFFFF },
+    { "DEVICE_TYPE_ALL",                          -1 /*0xFFFFFFFF*/ },
     /* cl_device_info */
     { "DEVICE_TYPE",                              0x1000 },
     { "DEVICE_VENDOR_ID",                         0x1001 },
