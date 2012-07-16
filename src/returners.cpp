@@ -1,46 +1,11 @@
 #include "v8cl.h"
 #include "constants.h"
+#include "callbacks.h"
 
 namespace v8cl {
-  extern int32_t (CALL *clGetEventInfo) (void*, uint32_t, size_t, void*, size_t*);
-
-  // Decrease reference count
-  void DisposeOpenCLObject (Persistent<Value> value, void* f) {
-    // cout << "Dispose CL " << (uintptr_t) f ;
-    bool dispose = true;
-    if (f && value->IsObject()) {
-      Local<Object> object = value->ToObject();
-      if (object->InternalFieldCount()) {
-        int32_t (CALL *release) (void* smth);
-        *(void**) &release = f;
-        void *ptr = object->GetPointerFromInternalField(0);
-        // cout << " " << (uintptr_t) ptr;
-        int32_t error = 0;
-
-        if (dispose) {
-          error = release(ptr);
-          // if (!error) {
-          //   cout << " SUCCESS";
-          // } else {
-          //   cout << " ERROR " << error;
-          // }
-        }
-      }
-    }
-    if (dispose) {
-      value.Dispose();
-      value.Clear();
-    } else {
-      value.MakeWeak(f, DisposeOpenCLObject);
-    }
-    // cout << endl;
-  }
-
   Handle<Value> WrapPointer (Persistent<ObjectTemplate> tpl, void* ptr, void* retainer = NULL) {
-    // Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
     Persistent<Object> p = Persistent<Object>::New(tpl->NewInstance());
     p->SetPointerInInternalField(0, ptr);
-    //cout << "PTROUT " << (uintptr_t) ptr << endl;
     p.MakeWeak(retainer, DisposeOpenCLObject);
     return p;
   }

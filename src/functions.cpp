@@ -1,5 +1,6 @@
 #include "v8cl.h"
 #include "constants.h"
+#include "callbacks.h"
 
 namespace v8cl {
 
@@ -487,42 +488,6 @@ namespace v8cl {
     } else {
       return CL_INVALID_WORK_DIMENSION;
     }
-  }
-
-
-  // Callback stuff
-  void InvokedByOpenCL (void* event, int32_t type, void* data) {
-    if (data) {
-      EventHandler* handler = (EventHandler*) data;
-      if (handler->events.shake) {
-        //handler->event = event;
-        handler->type = type;
-        handler->events.shake(handler->impl_handle);
-      }
-    } else {
-      // TODO: what here?
-      //cout << "bad" << endl;
-    }
-  }
-
-  void InvokeBackInEventLoop (EventHandler* handler) {
-    if (handler->f->IsFunction()) {
-      Persistent<Function> f = Persistent<Function>::Cast<Value>(handler->f);
-      Handle<Value> args[3];
-      args[0] = handler->event;//External::Wrap(handler->event);
-      args[1] = Int32::New(handler->type);
-      args[2] = Local<Value>::New(handler->data);
-      f->Call(f, 3, args);
-      f.Dispose();
-      f.Clear();
-    }
-    handler->f.Dispose();
-    handler->f.Clear();
-    handler->data.Dispose();
-    handler->data.Clear();
-    handler->event.Dispose();
-    handler->event.Clear();
-    delete handler;
   }
 
   int32_t SetEventCallback (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
