@@ -3,10 +3,10 @@
 #include "callbacks.h"
 
 namespace v8cl {
-  Handle<Value> WrapPointer (Persistent<ObjectTemplate> tpl, void* ptr, void* retainer = NULL) {
+  Handle<Value> WrapPointer (Persistent<ObjectTemplate> tpl, void* ptr, void* release) {
     Persistent<Object> p = Persistent<Object>::New(tpl->NewInstance());
     p->SetPointerInInternalField(0, ptr);
-    p.MakeWeak(retainer, DisposeOpenCLObject);
+    p.MakeWeak(release, DisposeOpenCLObject);
     return p;
   }
 
@@ -18,9 +18,6 @@ namespace v8cl {
     if (result.size() > 1) size = *(size_t*) result[1] / sizeof(void*);
 
     for (size_t i = 0; i < size; ++i) {
-      // Local<Value> ptr = ;
-      // Persistent<Value> p = Persistent<Value>::New(External::New(nativeArray[i]));
-      // p.MakeWeak(NULL, IamWeak);
       array->Set(i, WrapPointer(wrapper->objectTemplate, nativeArray[i], wrapper->releaseFunction));
     }
 
@@ -28,11 +25,6 @@ namespace v8cl {
   }
 
   Handle<Value> ReturnPointer (const Wrapper* wrapper, vector<void*>& natives, vector<void*>& result) {
-    // void *ptr = *(void**) result[0];
-    // Persistent<Value> p = Persistent<Value>::New(External::New(ptr));
-    // p.MakeWeak(NULL, IamWeak);
-
-    // cout << wrapper->name << ' ';
     return WrapPointer(wrapper->objectTemplate, *(void**) result[0], wrapper->releaseFunction);
   }
 

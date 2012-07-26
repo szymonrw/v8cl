@@ -93,19 +93,29 @@ namespace v8cl {
 
     for (Wrapper *wrapper = wrappers; wrapper->name; ++wrapper) {
       // Omit wrappers without action defined.
-      if (!wrapper->action) continue;
+      if (!wrapper->action) {
+        continue;
+      }
 
       wrapper->f = LoadFunctionFromLib(opencl, wrapper->name, loadingErrors);
-      if (!wrapper->f) continue;
+      if (!wrapper->f) {
+        continue;
+      }
 
       // Load function that will decrease returned object's reference count
       if (wrapper->releaseFunctionName) {
         wrapper->releaseFunction =
           LoadFunctionFromLib(opencl, wrapper->releaseFunctionName, loadingErrors);
-        if (!wrapper->releaseFunction) continue;
+        if (!wrapper->releaseFunction) {
+          wrapper->f = NULL;
+          continue;
+        }
       }
 
-      if (!EnsureCorrectMinArgc(wrapper, loadingErrors)) continue;
+      if (!EnsureCorrectMinArgc(wrapper, loadingErrors)) {
+        wrapper->f = NULL;
+        continue;
+      }
 
       wrapper->objectTemplate = objectTemplate;
       wrapper->events = events;

@@ -494,22 +494,21 @@ namespace v8cl {
     int32_t (CALL *clSetEventCallback) (void*, int32_t, pfn_notify, void*);
     *(void**) &clSetEventCallback = wrapper->f;
 
-    EventHandler *handler = new EventHandler; //(EventHandler*) malloc(sizeof(EventHandler));
+    EventHandler *handler = new EventHandler;
     handler->events = wrapper->events;
     handler->event = *(Persistent<Value>*) natives[0];
     int32_t type = *(int32_t*) natives[1];
     handler->f = *(Persistent<Value>*) natives[2];
     handler->data = *(Persistent<Value>*) natives[3];
     void *event = Get<void*>(handler->event);
-    // cout << "EVENT_CALLBACK " << (uint64_t) event << endl;
 
-    int32_t error = clSetEventCallback(event, type, InvokedByOpenCL, handler);
+    int32_t error = clSetEventCallback(event, type, FireEvent, handler);
     if (error) {
       delete handler;
       return error;
     }
 
-    handler->impl_handle = handler->events.add(handler);
+    handler->implHandle = handler->events.add(handler);
 
     return 0;
   }

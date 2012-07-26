@@ -1,4 +1,5 @@
 #include "../v8cl.h"
+#include "../callbacks.h"
 #include <node.h>
 
 using namespace v8cl;
@@ -14,9 +15,9 @@ static void DeleteHandle (uv_handle_t* handle) {
 }
 
 // Function called in node's event loop
-static void InvokeHandler (uv_async_t* handle, int status) {
-  InvokeBackInEventLoop((EventHandler*) handle->data);
-  uv_close((uv_handle_t*) handle, DeleteHandle);
+static void InvokeHandler (uv_async_t* uv_handle, int status) {
+  HandleEvent((EventHandler*) uv_handle->data);
+  uv_close((uv_handle_t*) uv_handle, DeleteHandle);
 }
 
 static void* RegisterHandler (EventHandler* handler) {

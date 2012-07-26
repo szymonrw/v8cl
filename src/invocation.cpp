@@ -1,9 +1,9 @@
 #include "v8cl.h"
 
-#define V8CL_ERROR_WRAPPER_MISSING "Wrapper missing."
+#define V8CL_ERROR_WRAPPER_MISSING          "Wrapper missing."
 #define V8CL_ERROR_FUNCTION_NOT_IMPLEMENTED "Function not implemented."
-#define V8CL_ERROR_NEED_MORE_ARGUMENTS "Need more arguments, in total:"
-#define V8CL_ERROR_UNKNOWN_OPENCL_ERROR "Unknown WebCL error code:"
+#define V8CL_ERROR_NEED_MORE_ARGUMENTS      "Need more arguments, in total:"
+#define V8CL_ERROR_UNKNOWN_OPENCL_ERROR     "Unknown WebCL error code:"
 
 #define V8CL_INVOCATION_ARGS (Wrapper*& wrapper,       \
                               const Arguments& args,   \
@@ -42,7 +42,7 @@ namespace v8cl {
     // Invoke converters for given arguments
     Converter *converter = wrapper->converters;
     for (int i = 0;
-         (i < length) && *converter && (i < V8CL_MAX_CONVERTERS);
+         *converter && (i < length) && (i < V8CL_MAX_CONVERTERS);
          ++i, ++converter) {
       (*converter)(wrapper, args[i], natives);
     }
@@ -63,7 +63,7 @@ namespace v8cl {
     return NULL;
   }
 
-  const char* ConvertResult  V8CL_INVOCATION_ARGS {
+  const char* ConvertResult V8CL_INVOCATION_ARGS {
     if (wrapper->returner) {
       jsResult = wrapper->returner(wrapper, natives, result);
     }
@@ -90,9 +90,9 @@ namespace v8cl {
     int32_t errorNumber = 0;
     Wrapper *wrapper = (Wrapper*) External::Unwrap(args.Data());
 
-    InvocationStep *step = invocationSteps;
-
-    while (*step) {
+    for (InvocationStep *step = invocationSteps;
+         *step;
+         ++step) {
       error = (*step)(wrapper, args, natives, result, jsResult, errorNumber);
 
       if (error) {
@@ -106,7 +106,6 @@ namespace v8cl {
         jsResult = ThrowException(Exception::Error(message));
         break;
       }
-      ++step;
     }
 
     DeleteAllItems(natives);

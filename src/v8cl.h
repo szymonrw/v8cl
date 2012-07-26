@@ -38,7 +38,7 @@ namespace v8cl {
 
     `shake` needs to queue the event in event loop. It's
     responsibility is to cause invokation of
-    InvokeBackInEventLoop(EventHandler*) _inside_ the event loop and
+    HandleEvent(EventHandler*) _inside_ the event loop and
     clean up any implementation specific state (at any time after the
     event).
 
@@ -47,7 +47,7 @@ namespace v8cl {
   */
   struct EventSupport {
     void* (*add) (EventHandler* handler);
-    void (*shake) (void* their_handle);
+    void (*shake) (void* implHandle);
   };
 
   struct EventHandler {
@@ -57,7 +57,7 @@ namespace v8cl {
     Persistent<Value> event;
 
     int32_t type;
-    void* impl_handle;
+    void* implHandle;
   };
 
   struct Wrapper {
@@ -74,7 +74,6 @@ namespace v8cl {
   };
 
   Handle<Value> InvokeWrapper (const Arguments& args);
-  void InvokeBackInEventLoop (EventHandler* handler);
 
   // Constants
   struct StrToInt { const char *name; int value; };

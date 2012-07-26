@@ -5,7 +5,8 @@
 
 namespace v8cl {
   Wrapper wrappers[] = {
-    { "clFlush", OneArgFn, { One<void*> } },
+    { "clFlush", OneArgFn,
+      { One<void*>    /* queue */ } },
 
     { "clGetPlatformInfo", GetInfo,
       { One<void*>    /* platform   */,
