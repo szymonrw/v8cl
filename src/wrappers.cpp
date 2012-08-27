@@ -6,7 +6,9 @@
 namespace v8cl {
   Wrapper wrappers[] = {
     { "clFlush", OneArgFn,
-      { One<void*>    /* queue */ } },
+      { One<void*>    /* queue      */ } },
+
+    // Get*Info
 
     { "clGetPlatformInfo", GetInfo,
       { One<void*>    /* platform   */,
@@ -58,7 +60,7 @@ namespace v8cl {
         One<uint32_t> /* param_name */ },
       ReturnInfo },
 
-    // Nested info
+    // Get**Info (nested info)
 
     { "clGetProgramBuildInfo", GetDependentInfo,
       { One<void*>    /* program    */,
@@ -179,15 +181,15 @@ namespace v8cl {
       ReturnPointer, "clReleaseEvent" },
 
     { "clEnqueueNDRangeKernel", EnqueueNDRangeKernel,
-      { One<void*>    /* queue  */,
-        One<void*>    /* kernel */,
+      { One<void*>    /* queue              */,
+        One<void*>    /* kernel             */,
         Many<size_t>  /* global_work_offset */,
         Many<size_t>  /* global_work_size   */,
-        Many<size_t> },
+        Many<size_t>  /* local_work_size    */ },
       ReturnPointer, "clReleaseEvent" },
 
     { "clSetEventCallback", SetEventCallback,
-      { Persist       /* event */,
+      { Persist       /* event                      */,
         One<int32_t>  /* command_exec_callback_type */,
         Persist       /* pfn_event_notify           */,
         Persist       /* user_data                  */ } },
