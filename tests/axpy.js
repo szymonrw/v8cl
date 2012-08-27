@@ -96,7 +96,7 @@ var f = function() {
 // }, 300);
 
 
-f();
 for (var i = 0; i < 10; ++i) {
+  f();
   gc();
 }
