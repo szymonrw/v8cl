@@ -41,9 +41,9 @@ namespace v8cl {
       args[1] = Int32::New(handler->type);
       args[2] = Local<Value>::New(handler->data);
       f->Call(f, 3, args);
-      f.Dispose();
       f.Clear();
     }
+
     handler->f.Dispose();
     handler->f.Clear();
     handler->data.Dispose();
@@ -52,5 +52,4 @@ namespace v8cl {
     handler->event.Clear();
     delete handler;
   }
-
 }
