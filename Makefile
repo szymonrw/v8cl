@@ -8,14 +8,15 @@ INPUTS = $(wildcard src/*.cpp)
 OBJECTS = $(patsubst src/%.cpp,build/%.o,$(INPUTS))
 NODE_GLUE_OBJECTS = $(patsubst src/%.cpp,build/%.o,$(NODE_GLUE))
 
-
 TESTS = $(wildcard tests/*.js)
 TESTS_OUTPUTS = $(patsubst tests/%.js,build/%.txt,$(TESTS))
 
 .PHONY: node_tests all
 
+NODE_DEBUG = ~/src/node/src/node-v0.8.8/out/Debug/node
+
 all: $(NODE_TARGET) node_tests
-	node --expose_gc tests/axpy.js
+	$(NODE_DEBUG) --expose_gc tests/axpy.js
 
 
 $(NODE_TARGET): $(OBJECTS) $(NODE_GLUE_OBJECTS)
