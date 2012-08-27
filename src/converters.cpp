@@ -185,8 +185,7 @@ namespace v8cl {
   }
 
   void Persist (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
-    Persistent<Value> *persisted = (Persistent<Value>*) malloc(sizeof(Persistent<Value>));
-    *persisted = Persistent<Value>::New(value);
-    natives.push_back(persisted);
+    Persistent<Value> persisted = Persistent<Value>::New(value);
+    PushBackWrapped(natives, persisted);
   }
 }
