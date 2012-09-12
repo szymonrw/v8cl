@@ -49,7 +49,6 @@ var f = function() {
   console.log(cl.getProgramBuildInfo(program, device, cl.PROGRAM_BUILD_LOG));
 
   var axpy = cl.createKernel(program, "axpy");
-  // var kernels = cl.createKernelsInProgram(program);
 
   var yd = cl.createBuffer(context, cl.MEM_READ_WRITE, yh.byteLength);
   var xd = cl.createBuffer(context, cl.MEM_READ_ONLY, xh.byteLength);
@@ -57,14 +56,11 @@ var f = function() {
   cl.setKernelArg(axpy, 0, 8, yd);
   cl.setKernelArg(axpy, 1, 8, xd);
   cl.setKernelArg(axpy, 2, 8, new Float64Array([5]));
-  // cl.setKernelArg(axpy, 2, 8, new Buffer([127,255,255,4,5,6,7,255]));
 
   cl.enqueueWriteBuffer(queue, yd, 0, yh);
   cl.setEventCallback(cl.enqueueWriteBuffer(queue, xd, 0, xh), cl.COMPLETE, null, xh);
   cl.enqueueNDRangeKernel(queue, axpy, [], [yh.length], [1]);
 
-  //console.log(cl.getEventInfo(e, cl.EVENT_REFERENCE_COUNT));
-  //cl.setEventCallback(e, cl.COMPLETE, null, e);
 
   spitArray(yh, "y");
   console.log("   + 5 *");
@@ -85,16 +81,6 @@ var f = function() {
 
   cl.flush(queue);
 };
-
-
-// setTimeout(function() {
-//    console.log("bye");
-
-//   for (var i = 0; i < 10; ++i) {
-//     gc();
-//   }
-// }, 300);
-
 
 for (var i = 0; i < 10; ++i) {
   f();
