@@ -183,9 +183,6 @@ namespace v8cl {
     result.push_back(devices);
 
     PushBackWrapped(result, size * sizeof(void*));
-    // size_t *sizeHolder = (size_t*) malloc(sizeof(size));
-    // *sizeHolder = size * sizeof(void*);
-    // result.push_back(sizeHolder);
     return 0;
   }
 
@@ -198,8 +195,6 @@ namespace v8cl {
     void *devices = natives[1];
     size_t size = *(size_t*) natives[2];
 
-    // TODO: implement user_data as typed array?
-
     int32_t error = 0;
     void *context = clCreateContext(properties, size, devices, NULL, NULL, &error);
     if (error) {
@@ -207,9 +202,6 @@ namespace v8cl {
     }
 
     PushBackWrapped(result, context);
-    // void **holder = (void**) malloc(sizeof(void*));
-    // *holder = context;
-    // result.push_back(holder);
     return 0;
   }
 
@@ -222,16 +214,12 @@ namespace v8cl {
     uint32_t device_type = *(uint32_t*) natives[1];
 
     int32_t error = 0;
-    // sprawdzic w zad801
     void *context = clCreateContextFromType(properties, device_type, NULL, NULL, &error);
     if (error) {
       return error;
     }
 
     PushBackWrapped(result, context);
-    // void **holder = (void**) malloc(sizeof(void*));
-    // *holder = context;
-    // result.push_back(holder);
     return 0;
   }
 
@@ -250,9 +238,6 @@ namespace v8cl {
     }
 
     PushBackWrapped(result, queue);
-    // void **holder = (void**) malloc(sizeof(void*));
-    // *holder = queue;
-    // result.push_back(holder);
     return 0;
   }
 
@@ -263,15 +248,13 @@ namespace v8cl {
     void *context = *(void**) natives[0];
     uint32_t flags = *(uint32_t*) natives[1];
     size_t size = *(size_t*) natives[2];
-    void *host_ptr = NULL; //*(void**) natives[3]; // TODO: Native array
+    void *host_ptr = NULL;
 
     int32_t error = 0;
     void *mem = clCreateBuffer(context, flags, size, host_ptr, &error);
     if (error) {
       return error;
     }
-
-    //cout << "MEM " << (uintptr_t) mem << endl;
 
     PushBackWrapped(result, mem);
     return 0;
@@ -306,8 +289,8 @@ namespace v8cl {
     cl_image_format *image_format = (cl_image_format*) natives[2];
     size_t width = *(size_t*) natives[3];
     size_t height = *(size_t*) natives[4];
-    size_t row_pitch = 0; // TODO: depends on host_ptr // *(size_t*) natives[5];
-    void *host_ptr = NULL; // TODO: Native array
+    size_t row_pitch = 0;
+    void *host_ptr = NULL;
 
     int32_t error = 0;
     void *mem = clCreateImage2D(context, flags, image_format, width, height, row_pitch, host_ptr, &error);
@@ -329,9 +312,9 @@ namespace v8cl {
     size_t width = *(size_t*) natives[3];
     size_t height = *(size_t*) natives[4];
     size_t depth = *(size_t*) natives[5];
-    size_t row_pitch = 0; // TODO: depends on host_ptr // *(size_t*) natives[6];
-    size_t slice_pitch = 0; // TODO: depends on host_ptr // *(size_t*) natives[7];
-    void *host_ptr = NULL; // TODO: Native array
+    size_t row_pitch = 0;
+    size_t slice_pitch = 0;
+    void *host_ptr = NULL;
 
     int32_t error = 0;
     void *mem = clCreateImage3D(context, flags, image_format, width, height, depth, row_pitch, slice_pitch, host_ptr, &error);
@@ -384,7 +367,7 @@ namespace v8cl {
     void *devices = natives[1];
     size_t num_devices = *(size_t*) natives[2];
     char *options = (char*) natives[3];
-    // natives[4] would is the size of options
+    // natives[4] is the size of options
 
     uint32_t error = clBuildProgram(program, num_devices, devices, options, NULL, NULL);
     return error;
@@ -512,254 +495,4 @@ namespace v8cl {
 
     return 0;
   }
-
-//
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueReadBufferRect(cl_command_queue    /* command_queue */,
-//                        cl_mem              /* buffer */,
-//                        cl_bool             /* blocking_read */,
-//                        const size_t *      /* buffer_origin */,
-//                        const size_t *      /* host_origin */,
-//                        const size_t *      /* region */,
-//                        size_t              /* buffer_row_pitch */,
-//                        size_t              /* buffer_slice_pitch */,
-//                        size_t              /* host_row_pitch */,
-//                        size_t              /* host_slice_pitch */,
-//                        void *              /* ptr */,
-//                        cl_uint             /* num_events_in_wait_list */,
-//                        const cl_event *    /* event_wait_list */,
-//                        cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_1;
-//
-
-//
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueWriteBufferRect(cl_command_queue    /* command_queue */,
-//                         cl_mem              /* buffer */,
-//                         cl_bool             /* blocking_write */,
-//                         const size_t *      /* buffer_origin */,
-//                         const size_t *      /* host_origin */,
-//                         const size_t *      /* region */,
-//                         size_t              /* buffer_row_pitch */,
-//                         size_t              /* buffer_slice_pitch */,
-//                         size_t              /* host_row_pitch */,
-//                         size_t              /* host_slice_pitch */,
-//                         const void *        /* ptr */,
-//                         cl_uint             /* num_events_in_wait_list */,
-//                         const cl_event *    /* event_wait_list */,
-//                         cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_1;
-//
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueCopyBuffer(cl_command_queue    /* command_queue */,
-//                    cl_mem              /* src_buffer */,
-//                    cl_mem              /* dst_buffer */,
-//                    size_t              /* src_offset */,
-//                    size_t              /* dst_offset */,
-//                    size_t              /* cb */,
-//                    cl_uint             /* num_events_in_wait_list */,
-//                    const cl_event *    /* event_wait_list */,
-//                    cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_0;
-//
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueCopyBufferRect(cl_command_queue    /* command_queue */,
-//                        cl_mem              /* src_buffer */,
-//                        cl_mem              /* dst_buffer */,
-//                        const size_t *      /* src_origin */,
-//                        const size_t *      /* dst_origin */,
-//                        const size_t *      /* region */,
-//                        size_t              /* src_row_pitch */,
-//                        size_t              /* src_slice_pitch */,
-//                        size_t              /* dst_row_pitch */,
-//                        size_t              /* dst_slice_pitch */,
-//                        cl_uint             /* num_events_in_wait_list */,
-//                        const cl_event *    /* event_wait_list */,
-//                        cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_1;
-//
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueReadImage(cl_command_queue     /* command_queue */,
-//                   cl_mem               /* image */,
-//                   cl_bool              /* blocking_read */,
-//                   const size_t *       /* origin[3] */,
-//                   const size_t *       /* region[3] */,
-//                   size_t               /* row_pitch */,
-//                   size_t               /* slice_pitch */,
-//                   void *               /* ptr */,
-//                   cl_uint              /* num_events_in_wait_list */,
-//                   const cl_event *     /* event_wait_list */,
-//                   cl_event *           /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueWriteImage(cl_command_queue    /* command_queue */,
-//                    cl_mem              /* image */,
-//                    cl_bool             /* blocking_write */,
-//                    const size_t *      /* origin[3] */,
-//                    const size_t *      /* region[3] */,
-//                    size_t              /* input_row_pitch */,
-//                    size_t              /* input_slice_pitch */,
-//                    const void *        /* ptr */,
-//                    cl_uint             /* num_events_in_wait_list */,
-//                    const cl_event *    /* event_wait_list */,
-//                    cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueCopyImage(cl_command_queue     /* command_queue */,
-//                   cl_mem               /* src_image */,
-//                   cl_mem               /* dst_image */,
-//                   const size_t *       /* src_origin[3] */,
-//                   const size_t *       /* dst_origin[3] */,
-//                   const size_t *       /* region[3] */,
-//                   cl_uint              /* num_events_in_wait_list */,
-//                   const cl_event *     /* event_wait_list */,
-//                   cl_event *           /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueCopyImageToBuffer(cl_command_queue /* command_queue */,
-//                           cl_mem           /* src_image */,
-//                           cl_mem           /* dst_buffer */,
-//                           const size_t *   /* src_origin[3] */,
-//                           const size_t *   /* region[3] */,
-//                           size_t           /* dst_offset */,
-//                           cl_uint          /* num_events_in_wait_list */,
-//                           const cl_event * /* event_wait_list */,
-//                           cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueCopyBufferToImage(cl_command_queue /* command_queue */,
-//                           cl_mem           /* src_buffer */,
-//                           cl_mem           /* dst_image */,
-//                           size_t           /* src_offset */,
-//                           const size_t *   /* dst_origin[3] */,
-//                           const size_t *   /* region[3] */,
-//                           cl_uint          /* num_events_in_wait_list */,
-//                           const cl_event * /* event_wait_list */,
-//                           cl_event *       /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY void * CL_API_CALL
-//clEnqueueMapBuffer(cl_command_queue /* command_queue */,
-//                   cl_mem           /* buffer */,
-//                   cl_bool          /* blocking_map */,
-//                   cl_map_flags     /* map_flags */,
-//                   size_t           /* offset */,
-//                   size_t           /* cb */,
-//                   cl_uint          /* num_events_in_wait_list */,
-//                   const cl_event * /* event_wait_list */,
-//                   cl_event *       /* event */,
-//                   cl_int *         /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY void * CL_API_CALL
-//clEnqueueMapImage(cl_command_queue  /* command_queue */,
-//                  cl_mem            /* image */,
-//                  cl_bool           /* blocking_map */,
-//                  cl_map_flags      /* map_flags */,
-//                  const size_t *    /* origin[3] */,
-//                  const size_t *    /* region[3] */,
-//                  size_t *          /* image_row_pitch */,
-//                  size_t *          /* image_slice_pitch */,
-//                  cl_uint           /* num_events_in_wait_list */,
-//                  const cl_event *  /* event_wait_list */,
-//                  cl_event *        /* event */,
-//                  cl_int *          /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueUnmapMemObject(cl_command_queue /* command_queue */,
-//                        cl_mem           /* memobj */,
-//                        void *           /* mapped_ptr */,
-//                        cl_uint          /* num_events_in_wait_list */,
-//                        const cl_event *  /* event_wait_list */,
-//                        cl_event *        /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueTask(cl_command_queue  /* command_queue */,
-//              cl_kernel         /* kernel */,
-//              cl_uint           /* num_events_in_wait_list */,
-//              const cl_event *  /* event_wait_list */,
-//              cl_event *        /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueNativeKernel(cl_command_queue  /* command_queue */,
-//            void (*user_func)(void *),
-//                      void *            /* args */,
-//                      size_t            /* cb_args */,
-//                      cl_uint           /* num_mem_objects */,
-//                      const cl_mem *    /* mem_list */,
-//                      const void **     /* args_mem_loc */,
-//                      cl_uint           /* num_events_in_wait_list */,
-//                      const cl_event *  /* event_wait_list */,
-//                      cl_event *        /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueMarker(cl_command_queue    /* command_queue */,
-//                cl_event *          /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueWaitForEvents(cl_command_queue /* command_queue */,
-//                       cl_uint          /* num_events */,
-//                       const cl_event * /* event_list */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clEnqueueBarrier(cl_command_queue /* command_queue */) CL_API_SUFFIX__VERSION_1_0;
-
-///* Extension function access
-// *
-// * Returns the extension function address for the given function name,
-// * or NULL if a valid function can not be found.  The client must
-// * check to make sure the address is not NULL, before using or
-// * calling the returned function address.
-// */
-//extern CL_API_ENTRY void * CL_API_CALL clGetExtensionFunctionAddress(const char * /* func_name */) CL_API_SUFFIX__VERSION_1_0;
-
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clSetMemObjectDestructorCallback(  cl_mem /* memobj */,
-//                                    void (CL_CALLBACK * /*pfn_notify*/)( cl_mem /* memobj */, void* /*user_data*/),
-//                                    void * /*user_data */ )             CL_API_SUFFIX__VERSION_1_1;
-
-    //extern CL_API_ENTRY cl_program CL_API_CALL
-//clCreateProgramWithBinary(cl_context                     /* context */,
-//                          cl_uint                        /* num_devices */,
-//                          const cl_device_id *           /* device_list */,
-//                          const size_t *                 /* lengths */,
-//                          const unsigned char **         /* binaries */,
-//                          cl_int *                       /* binary_status */,
-//                          cl_int *                       /* errcode_ret */) CL_API_SUFFIX__VERSION_1_0;
-
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clUnloadCompiler(void) CL_API_SUFFIX__VERSION_1_0;
-
-
-
-///* Event Object APIs  */
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clWaitForEvents(cl_uint             /* num_events */,
-//                const cl_event *    /* event_list */) CL_API_SUFFIX__VERSION_1_0;
-
-//
-//extern CL_API_ENTRY cl_event CL_API_CALL
-//clCreateUserEvent(cl_context    /* context */,
-//                  cl_int *      /* errcode_ret */) CL_API_SUFFIX__VERSION_1_1;
-//
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clRetainEvent(cl_event /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clReleaseEvent(cl_event /* event */) CL_API_SUFFIX__VERSION_1_0;
-
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clSetUserEventStatus(cl_event   /* event */,
-//                     cl_int     /* execution_status */) CL_API_SUFFIX__VERSION_1_1;
-//
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clSetEventCallback( cl_event    /* event */,
-//                    cl_int      /* command_exec_callback_type */,
-//                    void (CL_CALLBACK * /* pfn_notify */)(cl_event, cl_int, void *),
-//                    void *      /* user_data */) CL_API_SUFFIX__VERSION_1_1;
-
-///* Profiling APIs  */
-//extern CL_API_ENTRY cl_int CL_API_CALL
-//clGetEventProfilingInfo(cl_event            /* event */,
-//                        cl_profiling_info   /* param_name */,
-//                        size_t              /* param_value_size */,
-//                        void *              /* param_value */,
-//                        size_t *            /* param_value_size_ret */) CL_API_SUFFIX__VERSION_1_0;
-
 }

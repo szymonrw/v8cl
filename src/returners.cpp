@@ -80,7 +80,7 @@ namespace v8cl {
     if (result.size() > 1) size = *(size_t*) result[1] / sizeof(intptr_t*) - 1;
 
     for (size_t i = 0; i < size; ++i) {
-      // TODO: loss of precision?
+      // Possible loss of precision?
       array->Set(i, Integer::New(nativeArray[i]));
     }
 

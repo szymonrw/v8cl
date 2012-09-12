@@ -1,2 +1,0 @@
-- set user events status to complete (or error?) when releasing.
-- grep TODO -r *

@@ -27,9 +27,6 @@ namespace v8cl {
         handler->type = type;
         handler->events.shake(handler->implHandle);
       }
-    } else {
-      // TODO: what here?
-      //cout << "bad" << endl;
     }
   }
 

@@ -96,8 +96,6 @@ namespace v8cl {
         One<uint32_t> /* properties */ },
       ReturnPointer, "clReleaseCommandQueue" },
 
-    // TODO: segfault in libOpenCL.so { "clCreateContextFromType", { NullTerminatedList, One<uint32_t> }, CreateContextFromType, PointerReturner, 2},
-
     { "clCreateBuffer", CreateBuffer,
       { One<void*>    /* context */,
         One<uint32_t> /* flags   */,
