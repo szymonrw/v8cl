@@ -19,7 +19,6 @@ namespace v8cl {
       Local<Object> object = value->ToObject();
       if (object->InternalFieldCount()) {
         ptr = object->GetPointerFromInternalField(0);
-        //cout << "PTR IN " << (uintptr_t) ptr << endl;
       }
     }
     return ptr;
@@ -47,26 +46,6 @@ namespace v8cl {
     T native = Get<T>(value);
     PushBackWrapped(natives, native);
   }
-
-  // void PointerArray (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
-  //   if (!value->IsArray()) {
-  //     natives.push_back(NULL);
-  //     // set size = 0;
-  //     PushBackWrapped(natives, 0);
-  //     return;
-  //   }
-
-  //   Handle<Array> array = Handle<Array>::Cast<Value>(value);
-  //   const size_t size = array->Length();
-  //   void **nativeArray = (void**) malloc(sizeof(void*) * size);
-
-  //   for (size_t i = 0; i < size; ++i) {
-  //     nativeArray[i] = External::Unwrap(array->Get(i));
-  //   }
-
-  //   natives.push_back(nativeArray);
-  //   PushBackWrapped(natives, size);
-  // }
 
   template<typename T>
   void Many (const Wrapper* wrapper, Handle<Value> value, vector<void*>& natives) {
@@ -174,7 +153,6 @@ namespace v8cl {
           byteLength *= 8;
           break;
         }
-        // cout << "buff " << (uintptr_t) buff << " len " << byteLength << endl;
       } else {
         buff = Get<void*>(value);
       }

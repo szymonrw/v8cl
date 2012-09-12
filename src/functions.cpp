@@ -155,9 +155,6 @@ namespace v8cl {
     result.push_back(platforms);
 
     PushBackWrapped(result, size * sizeof(void*));
-    // size_t *sizePtr = (size_t*) malloc(sizeof(size));
-    // *sizePtr = size * sizeof(void*);
-    // result.push_back(sizePtr);
     return 0;
   }
 
